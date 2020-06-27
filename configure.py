@@ -41,7 +41,7 @@ else:
 vscode_deb_url = 'https://go.microsoft.com/fwlink/?LinkID=760868'
 vscode_deb_name = 'code_1.46.1-1592428892_amd64.deb'
 vscode_deb_path = installers_dir_path + '/' + vscode_deb_name
-logger.info(f'Download VS Code .deb file from {vscode_deb_url} to {vscode_deb_path}...')
+logger.info(f'Download VS Code .deb file from \'{vscode_deb_url} to {vscode_deb_path}\'...')
 if not os.path.exists(vscode_deb_path): # verify md5sum?
     with urllib.request.urlopen(vscode_deb_url) as response:
         with open(vscode_deb_path, 'wb+') as vscode_deb_file:
@@ -93,7 +93,7 @@ gitconfig_content = (
     '       email = daniellima.pessoal@gmail.com\n'
 )
 should_recreate = False
-logger.info(f'Creating .gitconfig file at {home_path}')
+logger.info(f'Creating .gitconfig file at \'{home_path}\'')
 if not os.path.exists(gitconfig_path):
     should_recreate = True
 else:
@@ -102,9 +102,31 @@ else:
         if content != gitconfig_content:
             should_recreate = True
         else:
-            logger.info(f'Already exists and it\'s contents are correct')
+            logger.info(f'> Already exists and it\'s contents are correct')
 
 if should_recreate:
     with open(gitconfig_path, 'w') as gitconfig_file:
         gitconfig_file.write(gitconfig_content)
-    logger.info(f'File recreated sucessfully')
+    logger.info(f'> File recreated sucessfully')
+
+code_dir_name = 'code'
+code_dir_path = files_dir_path + '/' + code_dir_name
+logger.info(f"Create '{code_dir_path}' directory...")
+if not os.path.exists(code_dir_path):
+    os.mkdir(code_dir_path)
+    logger.info('> Created')
+else:
+    logger.info('> Already exists')
+
+autopy_repository_url = 'git@github.com:daniellima/autopy.git'
+autopy_repository_path = code_dir_path + '/' + 'autopy'
+logger.info(f"Clone autopy repository...")
+completed_process = subprocess.run(['git', 'clone', autopy_repository_url, autopy_repository_path], capture_output=True, text=True)
+if completed_process.returncode == 0:
+    logger.info(f'> Cloned successfully')
+else:
+    logger.info(f'> An error happened while cloning')
+    logger.info(f'Return Code: {completed_process.returncode}')
+    logger.info(f'Stdout: \'{completed_process.stdout}\'')
+    logger.info(f'Stderr: \'{completed_process.stderr}\'')
+    exit(1)
