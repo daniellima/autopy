@@ -92,18 +92,19 @@ gitconfig_content = (
     '       name = Daniel Lima\n'
     '       email = daniellima.pessoal@gmail.com\n'
 )
+should_recreate = False
 logger.info(f'Creating .gitconfig file at {home_path}')
 if not os.path.exists(gitconfig_path):
-    should_write = True
+    should_recreate = True
 else:
     with open(gitconfig_path, 'r') as gitconfig_file:
         content = gitconfig_file.read()
         if content != gitconfig_content:
-            should_write = True
+            should_recreate = True
         else:
             logger.info(f'Already exists and it\'s contents are correct')
 
-if should_write:
+if should_recreate:
     with open(gitconfig_path, 'w') as gitconfig_file:
         gitconfig_file.write(gitconfig_content)
     logger.info(f'File recreated sucessfully')
