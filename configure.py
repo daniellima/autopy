@@ -73,6 +73,18 @@ else:
     logger.info(f'Stderr: \'{completed_process.stderr}\'')
     exit(1)
 
+docker_extension_id = 'ms-azuretools.vscode-docker'
+logger.info(f'Install Docker extension on VS Code...')
+completed_process = subprocess.run(['code', '--install-extension', docker_extension_id], capture_output=True, text=True)
+if completed_process.returncode == 0:
+    logger.info(f'> Installed successfully')
+else:
+    logger.info(f'> An error happened while installing')
+    logger.info(f'Return Code: {completed_process.returncode}')
+    logger.info(f'Stdout: \'{completed_process.stdout}\'')
+    logger.info(f'Stderr: \'{completed_process.stderr}\'')
+    exit(1)
+
 logger.info(f'Install Git...')
 completed_process = subprocess.run(['sudo', 'apt', 'install', 'git'], capture_output=True, text=True)
 if completed_process.returncode == 0:
@@ -123,6 +135,23 @@ autopy_repository_path = code_dir_path + '/' + 'autopy'
 logger.info(f"Clone autopy repository on \'{autopy_repository_path}\'...")
 if not os.path.exists(autopy_repository_path):
     completed_process = subprocess.run(['git', 'clone', autopy_repository_url, autopy_repository_path], capture_output=True, text=True)
+    if completed_process.returncode == 0:
+        logger.info(f'> Cloned successfully')
+    else:
+        logger.info(f'> An error happened while cloning')
+        logger.info(f'Return Code: {completed_process.returncode}')
+        logger.info(f'Stdout: \'{completed_process.stdout}\'')
+        logger.info(f'Stderr: \'{completed_process.stderr}\'')
+        exit(1)
+else:
+    logger.info('> Already exists')
+
+
+awesome_links_generator_repository_url = 'git@github.com:daniellima/awesome-links-generator.git'
+awesome_links_generator_repository_path = code_dir_path + '/' + 'awesome-links-generator'
+logger.info(f"Clone awesome-links-generator repository on \'{awesome_links_generator_repository_path}\'...")
+if not os.path.exists(awesome_links_generator_repository_path):
+    completed_process = subprocess.run(['git', 'clone', awesome_links_generator_repository_url, awesome_links_generator_repository_path], capture_output=True, text=True)
     if completed_process.returncode == 0:
         logger.info(f'> Cloned successfully')
     else:
