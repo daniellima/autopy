@@ -49,31 +49,32 @@ if completed_process.returncode != 0:
         with urllib.request.urlopen(vscode_deb_url) as response:
             with open(vscode_deb_path, 'wb+') as vscode_deb_file:
                 shutil.copyfileobj(response, vscode_deb_file)
-        logger.info('> Downloaded sucessfully')
+        logger.info('  > Downloaded sucessfully')
     else:
-        logger.info('> Already downloaded')
+        logger.info('  > Already downloaded')
 
     logger.info(f'  Install VS Code...')
     completed_process = subprocess.run(['sudo', 'apt', 'install', '-y', vscode_deb_path], capture_output=True, text=True)
     if completed_process.returncode == 0:
-        logger.info(f'> Installed successfully')
+        logger.info(f'  > Installed successfully')
     else:
-        logger.info(f'> An error happened while installing')
-        logger.info(f'Return Code: {completed_process.returncode}')
-        logger.info(f'Stdout: \'{completed_process.stdout}\'')
-        logger.info(f'Stderr: \'{completed_process.stderr}\'')
+        logger.info(f'  > An error happened while installing')
+        logger.info(f'  Return Code: {completed_process.returncode}')
+        logger.info(f'  Stdout: \'{completed_process.stdout}\'')
+        logger.info(f'  Stderr: \'{completed_process.stderr}\'')
         exit(1)
 
 logger.info(f'  Ensure VS Code is in latest version...')
 completed_process = subprocess.run(['sudo', 'apt', 'install', '-y', 'code'], capture_output=True, text=True)
 if completed_process.returncode == 0:
-    logger.info(f'> Updated successfully')
+    logger.info(f'  > Updated successfully')
 else:
-    logger.info(f'> An error happened while updating')
-    logger.info(f'Return Code: {completed_process.returncode}')
-    logger.info(f'Stdout: \'{completed_process.stdout}\'')
-    logger.info(f'Stderr: \'{completed_process.stderr}\'')
+    logger.info(f'  > An error happened while updating')
+    logger.info(f'  Return Code: {completed_process.returncode}')
+    logger.info(f'  Stdout: \'{completed_process.stdout}\'')
+    logger.info(f'  Stderr: \'{completed_process.stderr}\'')
     exit(1)
+logger.info(f'> VS Code is in the latest version.')
 
 python_extension_id = 'ms-python.python'
 logger.info(f'Install Python extension on VS Code...')
@@ -176,3 +177,21 @@ if not os.path.exists(awesome_links_generator_repository_path):
         exit(1)
 else:
     logger.info('> Already exists')
+
+desafio_loja_integrada_repository_url = 'git@github.com:daniellima/desafio-lojaintegrada.git'
+desafio_loja_integrada_repository_path = code_dir_path + '/' + 'desafio-lojaintegrada'
+logger.info(f"Clone desafio-lojaintegrada repository on \'{desafio_loja_integrada_repository_path}\'...")
+if not os.path.exists(desafio_loja_integrada_repository_path):
+    completed_process = subprocess.run(['git', 'clone', desafio_loja_integrada_repository_url, desafio_loja_integrada_repository_path], capture_output=True, text=True)
+    if completed_process.returncode == 0:
+        logger.info(f'> Cloned successfully')
+    else:
+        logger.info(f'> An error happened while cloning')
+        logger.info(f'Return Code: {completed_process.returncode}')
+        logger.info(f'Stdout: \'{completed_process.stdout}\'')
+        logger.info(f'Stderr: \'{completed_process.stderr}\'')
+        exit(1)
+else:
+    logger.info('> Already exists')
+
+    

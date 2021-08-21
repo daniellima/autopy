@@ -14,3 +14,5 @@
     - Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 8268 (unattended-upgr)
 - Deactivate unnatend_upgrades. Don't want to stop my develpment environment for hours because of a update
     - https://askubuntu.com/questions/934807/unattended-upgrades-status
+- Adicionar cor no output
+- Colocar linhas de log mais agradáveis. Ou mudar para ser só print mesmo
