@@ -9,7 +9,6 @@
 - Generate SSH Key
 - Reuse code that is repeated at least three times
 - change hostname
-- Install Docker
 - Add timeout. One apt install command got stuck and blocked the entire installation 
     - Waiting for cache lock: Could not get lock /var/lib/dpkg/lock-frontend. It is held by process 8268 (unattended-upgr)
 - Deactivate unnatend_upgrades. Don't want to stop my develpment environment for hours because of a update

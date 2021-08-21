@@ -4,6 +4,17 @@ import urllib.request
 import shutil
 import subprocess
 
+def execute_command_in_bash(command_text):
+    completed_process = subprocess.run(['bash', '-c', command_text], capture_output=True, text=True)
+    if completed_process.returncode != 0:
+        logger.info(f'> An error happened while executing command on bash: {command_text}')
+        logger.info(f'Return Code: {completed_process.returncode}')
+        logger.info(f'Stdout: \'{completed_process.stdout}\'')
+        logger.info(f'Stderr: \'{completed_process.stderr}\'')
+        exit(1)
+    
+    return completed_process
+
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s %(asctime)s - %(name)s: %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -99,6 +110,28 @@ else:
     logger.info(f'Stdout: \'{completed_process.stdout}\'')
     logger.info(f'Stderr: \'{completed_process.stderr}\'')
     exit(1)
+
+# Instruction from https://docs.docker.com/engine/install/ubuntu/
+logger.info(f'Setup Docker repositories...')
+execute_command_in_bash('sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release')
+
+docker_keyring_path = '/usr/share/keyrings/docker-archive-keyring.gpg';
+if not os.path.exists(docker_keyring_path):
+    execute_command_in_bash(f'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o {docker_keyring_path}')
+
+docker_repo_configuration_file_path = '/etc/apt/sources.list.d/docker.list'
+if not os.path.exists(docker_repo_configuration_file_path):
+    execute_command_in_bash(f'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee {docker_repo_configuration_file_path} > /dev/null')
+logger.info(f'> Docker repositories have been defined')
+
+logger.info(f'Install Docker...')
+execute_command_in_bash('sudo apt-get install -y docker-ce docker-ce-cli containerd.io')
+logger.info(f'> Installed successfully...')
+
+logger.info(f'Install Docker-Compose')
+execute_command_in_bash('sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose')
+execute_command_in_bash('sudo chmod +x /usr/local/bin/docker-compose')
+logger.info(f'> Installed successfully...')
 
 logger.info(f'Install Git...')
 completed_process = subprocess.run(['sudo', 'apt', 'install', 'git'], capture_output=True, text=True)
