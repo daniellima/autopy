@@ -38,24 +38,38 @@ if not os.path.exists(installers_dir_path):
 else:
     logger.info('> Already exists')
 
-vscode_deb_url = 'https://go.microsoft.com/fwlink/?LinkID=760868'
-vscode_deb_name = 'code_1.46.1-1592428892_amd64.deb'
-vscode_deb_path = installers_dir_path + '/' + vscode_deb_name
-logger.info(f'Download VS Code .deb file from \'{vscode_deb_url} to {vscode_deb_path}\'...')
-if not os.path.exists(vscode_deb_path): # verify md5sum?
-    with urllib.request.urlopen(vscode_deb_url) as response:
-        with open(vscode_deb_path, 'wb+') as vscode_deb_file:
-            shutil.copyfileobj(response, vscode_deb_file)
-    logger.info('> Downloaded sucessfully')
-else:
-    logger.info('> Already downloaded')
+logger.info(f'Install latest version of VS Code...')
+completed_process = subprocess.run(['dpkg', '-s', 'code'], capture_output=True, text=True)
+if completed_process.returncode != 0:
+    vscode_deb_url = 'https://go.microsoft.com/fwlink/?LinkID=760868'
+    vscode_deb_name = 'code_1.46.1-1592428892_amd64.deb'
+    vscode_deb_path = installers_dir_path + '/' + vscode_deb_name
+    logger.info(f'  Download VS Code .deb file from \'{vscode_deb_url} to {vscode_deb_path}\'...')
+    if not os.path.exists(vscode_deb_path): # verify md5sum?
+        with urllib.request.urlopen(vscode_deb_url) as response:
+            with open(vscode_deb_path, 'wb+') as vscode_deb_file:
+                shutil.copyfileobj(response, vscode_deb_file)
+        logger.info('> Downloaded sucessfully')
+    else:
+        logger.info('> Already downloaded')
 
-logger.info(f'Install VS Code...')
-completed_process = subprocess.run(['sudo', 'apt', 'install', vscode_deb_path], capture_output=True, text=True)
+    logger.info(f'  Install VS Code...')
+    completed_process = subprocess.run(['sudo', 'apt', 'install', '-y', vscode_deb_path], capture_output=True, text=True)
+    if completed_process.returncode == 0:
+        logger.info(f'> Installed successfully')
+    else:
+        logger.info(f'> An error happened while installing')
+        logger.info(f'Return Code: {completed_process.returncode}')
+        logger.info(f'Stdout: \'{completed_process.stdout}\'')
+        logger.info(f'Stderr: \'{completed_process.stderr}\'')
+        exit(1)
+
+logger.info(f'  Ensure VS Code is in latest version...')
+completed_process = subprocess.run(['sudo', 'apt', 'install', '-y', 'code'], capture_output=True, text=True)
 if completed_process.returncode == 0:
-    logger.info(f'> Installed successfully')
+    logger.info(f'> Updated successfully')
 else:
-    logger.info(f'> An error happened while installing')
+    logger.info(f'> An error happened while updating')
     logger.info(f'Return Code: {completed_process.returncode}')
     logger.info(f'Stdout: \'{completed_process.stdout}\'')
     logger.info(f'Stderr: \'{completed_process.stderr}\'')
