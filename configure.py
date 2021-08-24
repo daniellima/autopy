@@ -227,4 +227,10 @@ if not os.path.exists(desafio_loja_integrada_repository_path):
 else:
     logger.info('> Already exists')
 
-    
+logger.info('Install net-tools')
+execute_command_in_bash('sudo apt install -y net-tools')
+logger.info('> Installed successfully')
+
+logger.info('Install Beekeeper Studio (Database Client)')
+execute_command_in_bash('sudo snap install beekeeper-studio')
+logger.info('> Installed successfully')
