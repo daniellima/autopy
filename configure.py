@@ -254,3 +254,11 @@ logger.info('> Installed successfully')
 logger.info('Install Postman')
 execute_command_in_bash('sudo snap install postman')
 logger.info('> Installed successfully')
+
+logger.info('Disable Xfce4 Screen Saver')
+execute_command_in_bash('xfconf-query -c xfce4-screensaver -p /saver/idle-activation/enabled -s false')
+logger.info('> Configuration done')
+
+logger.info('Windows Key open Application Menu (Whisker Menu)')
+execute_command_in_bash('xfconf-query -c xfce4-keyboard-shortcuts -p /commands/custom/Super_L --create -t string -s xfce4-popup-whiskermenu')
+logger.info('> Configuration done')
