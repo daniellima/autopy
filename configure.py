@@ -123,6 +123,7 @@ if not os.path.exists(docker_keyring_path):
 docker_repo_configuration_file_path = '/etc/apt/sources.list.d/docker.list'
 if not os.path.exists(docker_repo_configuration_file_path):
     execute_command_in_bash(f'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee {docker_repo_configuration_file_path} > /dev/null')
+    execute_command_in_bash('sudo apt-get update')
 logger.info(f'> Docker repositories have been defined')
 
 logger.info(f'Install Docker...')
