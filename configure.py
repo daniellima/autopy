@@ -66,7 +66,7 @@ if completed_process.returncode != 0:
         logger.info('  > Already downloaded')
 
     logger.info(f'  Install VS Code...')
-    completed_process = subprocess.run(['sudo', 'apt', 'install', '-y', vscode_deb_path], capture_output=True, text=True)
+    completed_process = subprocess.run(['sudo', 'apt-get', 'install', '-y', vscode_deb_path], capture_output=True, text=True)
     if completed_process.returncode == 0:
         logger.info(f'  > Installed successfully')
     else:
@@ -77,7 +77,7 @@ if completed_process.returncode != 0:
         exit(1)
 
 logger.info(f'  Ensure VS Code is in latest version...')
-completed_process = subprocess.run(['sudo', 'apt', 'install', '-y', 'code'], capture_output=True, text=True)
+completed_process = subprocess.run(['sudo', 'apt-get', 'install', '-y', 'code'], capture_output=True, text=True)
 if completed_process.returncode == 0:
     logger.info(f'  > Updated successfully')
 else:
@@ -114,7 +114,7 @@ else:
 
 # Instruction from https://docs.docker.com/engine/install/ubuntu/
 logger.info(f'Setup Docker repositories...')
-execute_command_in_bash('sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release')
+execute_command_in_bash('sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release')
 
 docker_keyring_path = '/usr/share/keyrings/docker-archive-keyring.gpg';
 if not os.path.exists(docker_keyring_path):
@@ -146,7 +146,7 @@ execute_command_in_bash(f'sudo chmod +x {docker_repo_configuration_file_path}')
 logger.info(f'> Installed successfully...')
 
 logger.info(f'Install Git...')
-completed_process = subprocess.run(['sudo', 'apt', 'install', 'git'], capture_output=True, text=True)
+completed_process = subprocess.run(['sudo', 'apt-get', 'install', '-y', 'git'], capture_output=True, text=True)
 if completed_process.returncode == 0:
     logger.info(f'> Installed successfully')
 else:
@@ -240,11 +240,11 @@ else:
     logger.info('> Already exists')
 
 logger.info('Install net-tools')
-execute_command_in_bash('sudo apt install -y net-tools')
+execute_command_in_bash('sudo apt-get install -y net-tools')
 logger.info('> Installed successfully')
 
 logger.info('Install htop')
-execute_command_in_bash('sudo apt install -y htop')
+execute_command_in_bash('sudo apt-get install -y htop')
 logger.info('> Installed successfully')
 
 logger.info('Install Beekeeper Studio (Database Client)')
