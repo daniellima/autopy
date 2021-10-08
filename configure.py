@@ -3,6 +3,7 @@ import logging
 import urllib.request
 import shutil
 import subprocess
+from pathlib import Path
 
 def execute_command_in_bash(command_text):
     completed_process = subprocess.run(['bash', '-c', command_text], capture_output=True, text=True)
@@ -18,7 +19,7 @@ def execute_command_in_bash(command_text):
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s %(asctime)s - %(name)s: %(message)s')
 logger = logging.getLogger(__name__)
 
-home_path = '/home/daniellima'
+home_path = str(Path.home())
 
 logger.info(f'Home is {home_path}')
 
