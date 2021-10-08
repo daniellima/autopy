@@ -136,8 +136,13 @@ execute_command_in_bash('sudo usermod -aG docker $USER')
 logger.info(f'> Configuration applied successfully')
 
 logger.info(f'Install Docker-Compose')
-execute_command_in_bash('sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose')
-execute_command_in_bash('sudo chmod +x /usr/local/bin/docker-compose')
+docker_compose_bin_path = '/usr/local/bin/docker-compose'
+if not os.path.exists(docker_repo_configuration_file_path):
+    execute_command_in_bash(f'sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o {docker_repo_configuration_file_path}')    
+    logger.info('  > Downloaded sucessfully')
+else:
+    logger.info('  > Download already done')
+execute_command_in_bash(f'sudo chmod +x {docker_repo_configuration_file_path}')
 logger.info(f'> Installed successfully...')
 
 logger.info(f'Install Git...')
