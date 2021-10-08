@@ -1,0 +1,4 @@
+Not everything is easily automated. These are the things I believe that cannot be reasonabily automated:
+- Restart session to make docker group configuration take effect
+- Change postman theme to black
+- Change postman to use dual vertical panels
