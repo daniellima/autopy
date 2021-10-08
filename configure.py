@@ -244,3 +244,7 @@ logger.info('> Installed successfully')
 logger.info('Install Beekeeper Studio (Database Client)')
 execute_command_in_bash('sudo snap install beekeeper-studio')
 logger.info('> Installed successfully')
+
+logger.info('Install Postman')
+execute_command_in_bash('sudo snap install postman')
+logger.info('> Installed successfully')
