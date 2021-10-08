@@ -237,6 +237,10 @@ logger.info('Install net-tools')
 execute_command_in_bash('sudo apt install -y net-tools')
 logger.info('> Installed successfully')
 
+logger.info('Install htop')
+execute_command_in_bash('sudo apt install -y htop')
+logger.info('> Installed successfully')
+
 logger.info('Install Beekeeper Studio (Database Client)')
 execute_command_in_bash('sudo snap install beekeeper-studio')
 logger.info('> Installed successfully')
