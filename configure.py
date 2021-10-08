@@ -128,6 +128,12 @@ logger.info(f'Install Docker...')
 execute_command_in_bash('sudo apt-get install -y docker-ce docker-ce-cli containerd.io')
 logger.info(f'> Installed successfully...')
 
+logger.info(f'Configure Docker to be run by non-root user')
+if execute_command_in_bash('getent group docker').returncode != 0:
+    execute_command_in_bash('sudo groupadd docker')
+execute_command_in_bash('sudo usermod -aG docker $USER')
+logger.info(f'> Configuration applied successfully')
+
 logger.info(f'Install Docker-Compose')
 execute_command_in_bash('sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose')
 execute_command_in_bash('sudo chmod +x /usr/local/bin/docker-compose')
