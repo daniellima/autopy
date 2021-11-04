@@ -6,6 +6,7 @@ import subprocess
 from pathlib import Path
 
 def execute_command_in_bash(command_text):
+    # logger.debug(f'Executing command {command_text}')
     completed_process = subprocess.run(['bash', '-c', command_text], capture_output=True, text=True)
     if completed_process.returncode != 0:
         logger.info(f'> An error happened while executing command on bash: {command_text}')
@@ -275,3 +276,35 @@ logger.info('> Installed successfully')
 logger.info('Configure kubectl autocompletion')
 execute_command_in_bash('kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null')
 logger.info('> Successfully configured kubectl bash completion')
+
+logger.info('Install AWS CLI')
+awscli_installer_dir_path = installers_dir_path + '/aws'
+awscli_unzipped_path = f'{awscli_installer_dir_path}/aws'
+logger.info(f' > Creating \'{awscli_installer_dir_path}\'')
+if not os.path.exists(awscli_installer_dir_path):
+    os.mkdir(awscli_installer_dir_path)
+    logger.info(' > Created')
+else:
+    logger.info(' > Already exists')
+logger.info(' > Installing AWS CLI')
+if os.path.exists('/usr/local/bin/aws'):
+    logger.info(' > Already installed')
+else:
+    logger.info(' > Download AWS CLI Zip')
+    awscli_zip_path = awscli_installer_dir_path + '/awscliv2.zip'
+    if not os.path.exists(awscli_zip_path):
+        execute_command_in_bash(f'curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "{awscli_zip_path}"')
+        logger.info(' > Downloaded AWS CLI Zip')
+    else:
+        logger.info(' > Already exists')
+    
+    if not os.path.exists(awscli_unzipped_path):
+        execute_command_in_bash(f'unzip {awscli_zip_path} -d {awscli_installer_dir_path}')
+    
+    execute_command_in_bash(f'sudo {awscli_unzipped_path}/install')
+    logger.info(' > Successfully installed')
+logger.info('> Successfully installed')
+
+logger.info('Ensure AWS CLI latest version')
+execute_command_in_bash(f'sudo {awscli_unzipped_path}/install --update')
+logger.info('> Successfully ensured latest version')
