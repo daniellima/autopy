@@ -306,3 +306,23 @@ logger.info('> Successfully installed')
 logger.info('Ensure AWS CLI latest version')
 execute_command_in_bash(f'sudo {awscli_unzipped_path}/install --update')
 logger.info('> Successfully ensured latest version')
+
+lens_deb_url = 'https://api.k8slens.dev/binaries/Lens-5.2.6-latest.20211104.1.amd64.deb'
+lens_deb_name = 'Lens-5.2.6-latest.20211104.1.amd64.deb'
+lens_deb_path = installers_dir_path + '/' + lens_deb_name
+logger.info(f'  Download Lens .deb file from \'{lens_deb_url} to {lens_deb_path}\'...')
+if not os.path.exists(lens_deb_path): # verify md5sum?
+    with urllib.request.urlopen(lens_deb_url) as response:
+        with open(lens_deb_path, 'wb+') as lens_deb_file:
+            shutil.copyfileobj(response, lens_deb_file)
+    logger.info('  > Downloaded sucessfully')
+else:
+    logger.info('  > Already downloaded')
+
+logger.info(f'  Install Lens...')
+execute_command_in_bash(f'sudo apt-get install -y {lens_deb_path}')
+
+
+logger.info('Install DBeaver')
+execute_command_in_bash('sudo snap install dbeaver-ce')
+logger.info('> Installed successfully')
