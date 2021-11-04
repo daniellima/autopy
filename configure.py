@@ -132,8 +132,6 @@ execute_command_in_bash('sudo apt-get install -y docker-ce docker-ce-cli contain
 logger.info(f'> Installed successfully...')
 
 logger.info(f'Configure Docker to be run by non-root user')
-if execute_command_in_bash('getent group docker').returncode != 0:
-    execute_command_in_bash('sudo groupadd docker')
 execute_command_in_bash('sudo usermod -aG docker $USER')
 logger.info(f'> Configuration applied successfully')
 
