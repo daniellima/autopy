@@ -263,3 +263,15 @@ logger.info('> Configuration done')
 logger.info('Windows Key open Application Menu (Whisker Menu)')
 execute_command_in_bash('xfconf-query -c xfce4-keyboard-shortcuts -p /commands/custom/Super_L --create -t string -s xfce4-popup-whiskermenu')
 logger.info('> Configuration done')
+
+logger.info('Install Meld')
+execute_command_in_bash('sudo apt-get install -y meld')
+logger.info('> Installed successfully')
+
+logger.info('Install Kubectl')
+execute_command_in_bash('sudo snap install kubectl --classic')
+logger.info('> Installed successfully')
+
+logger.info('Configure kubectl autocompletion')
+execute_command_in_bash('kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null')
+logger.info('> Successfully configured kubectl bash completion')
