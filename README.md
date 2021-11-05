@@ -16,3 +16,4 @@
 - Adicionar cor no output
 - Colocar linhas de log mais agradáveis. Ou mudar para ser só print mesmo
 - stop using sudo on the commands. If sudo is needed, I must call `sudo python3 configure.py`
+- instalar SOPS https://github.com/mozilla/sops/releases
