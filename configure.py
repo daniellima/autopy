@@ -255,8 +255,11 @@ logger.info('Install Postman')
 execute_command_in_bash('sudo snap install postman')
 logger.info('> Installed successfully')
 
-logger.info('Disable Xfce4 Screen Saver')
-execute_command_in_bash('xfconf-query -c xfce4-screensaver -p /saver/idle-activation/enabled -s false')
+logger.info('Disable Xfce4 locking the screen after the VM is idle for sometime')
+# It's not necessary, since the Host SO will ask for password in the lock screen after being idle for sometime
+# From here: https://askubuntu.com/questions/259190/xubuntu-no-password-request-after-suspension
+execute_command_in_bash('xfconf-query -c xfce4-session -p /shutdown/LockScreen -s false')
+execute_command_in_bash('xfconf-query -c xfce4-power-manager -p /xfce4-power-manager/lock-screen-suspend-hibernate -s false')
 logger.info('> Configuration done')
 
 logger.info('Windows Key open Application Menu (Whisker Menu)')
