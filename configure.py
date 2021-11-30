@@ -265,6 +265,10 @@ execute_command_in_bash('xfconf-query -c xfce4-power-manager -p /xfce4-power-man
 execute_command_in_bash('xfconf-query -c xfce4-screensaver -p /lock/enabled -s false')
 logger.info('> Configuration done')
 
+logger.info('Disable window dragging with alt+click')
+execute_command_in_bash('xfconf-query -c xfwm4 -p /general/easy_click -s none')
+logger.info('> Configuration done')
+
 logger.info('Windows Key open Application Menu (Whisker Menu)')
 execute_command_in_bash('xfconf-query -c xfce4-keyboard-shortcuts -p /commands/custom/Super_L --create -t string -s xfce4-popup-whiskermenu')
 logger.info('> Configuration done')
