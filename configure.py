@@ -113,6 +113,11 @@ else:
     logger.info(f'Stderr: \'{completed_process.stderr}\'')
     exit(1)
 
+logger.info('Adding custom configuration to VS Code')
+execute_command_in_bash('cp vscode/keybindings.json ~/.config/Code/User/keybindings.json')
+execute_command_in_bash('cp vscode/settings.json ~/.config/Code/User/settings.json')
+logger.info('> Custom configuration set')
+
 # Instruction from https://docs.docker.com/engine/install/ubuntu/
 logger.info(f'Setup Docker repositories...')
 execute_command_in_bash('sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release')
