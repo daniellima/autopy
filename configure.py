@@ -341,3 +341,31 @@ execute_command_in_bash(f'sudo apt-get install -y {lens_deb_path}')
 logger.info('Install DBeaver')
 execute_command_in_bash('sudo snap install dbeaver-ce')
 logger.info('> Installed successfully')
+
+logger.info('Install tfenv')
+tfenv_repository_url = 'https://github.com/tfutils/tfenv.git'
+tfenv_repository_path = installers_dir_path + '/' + 'tfenv'
+logger.info(f"> Clone tfenv repository on \'{tfenv_repository_path}\'...")
+if not os.path.exists(tfenv_repository_path):
+    completed_process = subprocess.run(['git', 'clone', tfenv_repository_url, tfenv_repository_path], capture_output=True, text=True)
+    if completed_process.returncode == 0:
+        logger.info(f'> Cloned successfully')
+    else:
+        logger.info(f'> An error happened while cloning')
+        logger.info(f'Return Code: {completed_process.returncode}')
+        logger.info(f'Stdout: \'{completed_process.stdout}\'')
+        logger.info(f'Stderr: \'{completed_process.stderr}\'')
+        exit(1)
+else:
+    logger.info('> Already exists')
+
+logger.info('> Add tfenv to path')
+if not os.path.exists('/usr/local/bin/tfenv'):
+    execute_command_in_bash(f'sudo ln -s {tfenv_repository_path}/bin/tfenv /usr/local/bin')
+    logger.info(' > Added tfenv to path')
+
+if not os.path.exists('/usr/local/bin/terraform'):
+    execute_command_in_bash(f'sudo ln -s {tfenv_repository_path}/bin/terraform /usr/local/bin')
+    logger.info(' > Added tfenv\'s terraform to path')
+
+logger.info('> Already in path')
