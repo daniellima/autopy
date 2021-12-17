@@ -89,6 +89,9 @@ else:
     exit(1)
 logger.info(f'> VS Code is in the latest version.')
 
+# VS Code extension ids can be found on the 'Identifier field'
+# of the extension page, at the bottom right corner
+
 python_extension_id = 'ms-python.python'
 logger.info(f'Install Python extension on VS Code...')
 completed_process = subprocess.run(['code', '--install-extension', python_extension_id], capture_output=True, text=True)
@@ -104,6 +107,18 @@ else:
 docker_extension_id = 'ms-azuretools.vscode-docker'
 logger.info(f'Install Docker extension on VS Code...')
 completed_process = subprocess.run(['code', '--install-extension', docker_extension_id], capture_output=True, text=True)
+if completed_process.returncode == 0:
+    logger.info(f'> Installed successfully')
+else:
+    logger.info(f'> An error happened while installing')
+    logger.info(f'Return Code: {completed_process.returncode}')
+    logger.info(f'Stdout: \'{completed_process.stdout}\'')
+    logger.info(f'Stderr: \'{completed_process.stderr}\'')
+    exit(1)
+
+terraform_extension_id = 'hashicorp.terraform'
+logger.info(f'Install Terraform extension on VS Code...')
+completed_process = subprocess.run(['code', '--install-extension', terraform_extension_id], capture_output=True, text=True)
 if completed_process.returncode == 0:
     logger.info(f'> Installed successfully')
 else:
