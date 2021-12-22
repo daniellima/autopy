@@ -128,6 +128,18 @@ else:
     logger.info(f'Stderr: \'{completed_process.stderr}\'')
     exit(1)
 
+prisma_extension_id = 'prisma.prisma'
+logger.info(f'Install Prisma extension on VS Code...')
+completed_process = subprocess.run(['code', '--install-extension', prisma_extension_id], capture_output=True, text=True)
+if completed_process.returncode == 0:
+    logger.info(f'> Installed successfully')
+else:
+    logger.info(f'> An error happened while installing')
+    logger.info(f'Return Code: {completed_process.returncode}')
+    logger.info(f'Stdout: \'{completed_process.stdout}\'')
+    logger.info(f'Stderr: \'{completed_process.stderr}\'')
+    exit(1)
+
 logger.info('Adding custom configuration to VS Code')
 execute_command_in_bash('cp vscode/keybindings.json ~/.config/Code/User/keybindings.json')
 execute_command_in_bash('cp vscode/settings.json ~/.config/Code/User/settings.json')
