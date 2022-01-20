@@ -396,3 +396,22 @@ if not os.path.exists('/usr/local/bin/terraform'):
     logger.info(' > Added tfenv\'s terraform to path')
 
 logger.info('> Already in path')
+
+logger.info('Install Redis CLI')
+execute_command_in_bash('sudo apt-get install -y redis-server')
+logger.info('> Installed successfully')
+
+# Instruction from https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/#install-mongodb-community-edition-using-deb-packages
+logger.info(f'Setup MongoDB repositories...')
+
+execute_command_in_bash(f'wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -')
+
+mongodb_repo_configuration_file_path = '/etc/apt/sources.list.d/mongodb-org-5.0.list'
+if not os.path.exists(mongodb_repo_configuration_file_path):
+    execute_command_in_bash(f'echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | sudo tee {mongodb_repo_configuration_file_path}')
+    execute_command_in_bash('sudo apt-get update')
+logger.info(f'> Docker repositories have been defined')
+
+logger.info(f'Install MongoDB Shell and Tools...')
+execute_command_in_bash('sudo apt-get install -y mongodb-mongosh mongodb-org-tools')
+logger.info(f'> Installed successfully...')
