@@ -415,3 +415,11 @@ logger.info(f'> Docker repositories have been defined')
 logger.info(f'Install MongoDB Shell and Tools...')
 execute_command_in_bash('sudo apt-get install -y mongodb-mongosh mongodb-org-tools')
 logger.info(f'> Installed successfully...')
+
+logger.info(f'Install NVM...')
+execute_command_in_bash('curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash')
+logger.info(f'> Installed successfully...')
+
+logger.info(f'Install jq...')
+execute_command_in_bash('sudo apt-get install -y jq')
+logger.info(f'> Installed successfully...')
