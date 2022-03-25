@@ -4,3 +4,4 @@ Not everything is easily automated. These are the things I believe that cannot b
 - Change postman to use dual vertical panels
 - run nvm install --lts (NVM is an alias loaded in bashrc and I cannot find a way to launch it from python. Using bash -i to force the loading of .bashrc for some reason causes the python process to stop. See: https://unix.stackexchange.com/questions/101620/how-to-load-bashrc-from-bash-c)
 - run npm install -g kafka-console (needs node installed, see item above)
+- run npm install -g bull-repl (needs node installed, see item above)
