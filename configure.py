@@ -397,8 +397,12 @@ if not os.path.exists('/usr/local/bin/terraform'):
 
 logger.info('> Already in path')
 
+# Apparently there is not a package to install just the redis-cli.
+# So, we install the server package and disable the server installation
 logger.info('Install Redis CLI')
 execute_command_in_bash('sudo apt-get install -y redis-server')
+execute_command_in_bash('sudo systemctl disable redis-server')
+execute_command_in_bash('sudo systemctl stop redis-server')
 logger.info('> Installed successfully')
 
 # Instruction from https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/#install-mongodb-community-edition-using-deb-packages
