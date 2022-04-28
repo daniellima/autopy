@@ -140,6 +140,18 @@ else:
     logger.info(f'Stderr: \'{completed_process.stderr}\'')
     exit(1)
 
+csharp_extension_id = 'ms-dotnettools.csharp'
+logger.info(f'Install C# extension on VS Code...')
+completed_process = subprocess.run(['code', '--install-extension', csharp_extension_id], capture_output=True, text=True)
+if completed_process.returncode == 0:
+    logger.info(f'> Installed successfully')
+else:
+    logger.info(f'> An error happened while installing')
+    logger.info(f'Return Code: {completed_process.returncode}')
+    logger.info(f'Stdout: \'{completed_process.stdout}\'')
+    logger.info(f'Stderr: \'{completed_process.stderr}\'')
+    exit(1)
+
 logger.info('Adding custom configuration to VS Code')
 execute_command_in_bash('cp vscode/keybindings.json ~/.config/Code/User/keybindings.json')
 execute_command_in_bash('cp vscode/settings.json ~/.config/Code/User/settings.json')
@@ -427,3 +439,11 @@ logger.info(f'> Installed successfully...')
 logger.info(f'Install jq...')
 execute_command_in_bash('sudo apt-get install -y jq')
 logger.info(f'> Installed successfully...')
+
+logger.info(f'Installing .NET 6 SDK')
+dotnet_deb_file_path = os.path.join(installers_dir_path, 'packages-microsoft-prod.deb')
+if not os.path.exists(dotnet_deb_file_path):
+    execute_command_in_bash(f'wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O {dotnet_deb_file_path}')
+    execute_command_in_bash(f'sudo dpkg -i {dotnet_deb_file_path}')
+    execute_command_in_bash('sudo apt-get update')
+execute_command_in_bash('sudo apt-get install -y dotnet-sdk-6.0')
