@@ -357,10 +357,6 @@ else:
     logger.info(' > Successfully installed')
 logger.info('> Successfully installed')
 
-logger.info('Ensure AWS CLI latest version')
-execute_command_in_bash(f'sudo {awscli_unzipped_path}/install --update')
-logger.info('> Successfully ensured latest version')
-
 lens_deb_url = 'https://api.k8slens.dev/binaries/Lens-5.2.6-latest.20211104.1.amd64.deb'
 lens_deb_name = 'Lens-5.2.6-latest.20211104.1.amd64.deb'
 lens_deb_path = installers_dir_path + '/' + lens_deb_name
