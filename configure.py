@@ -291,10 +291,6 @@ logger.info('Install htop')
 execute_command_in_bash('sudo apt-get install -y htop')
 logger.info('> Installed successfully')
 
-logger.info('Install Beekeeper Studio (Database Client)')
-execute_command_in_bash('sudo snap install beekeeper-studio')
-logger.info('> Installed successfully')
-
 logger.info('Install Postman')
 execute_command_in_bash('sudo snap install postman')
 logger.info('> Installed successfully')
@@ -372,11 +368,6 @@ else:
 logger.info(f'  Install Lens...')
 execute_command_in_bash(f'sudo apt-get install -y {lens_deb_path}')
 
-
-logger.info('Install DBeaver')
-execute_command_in_bash('sudo snap install dbeaver-ce')
-logger.info('> Installed successfully')
-
 logger.info('Install tfenv')
 tfenv_repository_url = 'https://github.com/tfutils/tfenv.git'
 tfenv_repository_path = installers_dir_path + '/' + 'tfenv'
@@ -443,3 +434,18 @@ if not os.path.exists(dotnet_deb_file_path):
     execute_command_in_bash(f'sudo dpkg -i {dotnet_deb_file_path}')
     execute_command_in_bash('sudo apt-get update')
 execute_command_in_bash('sudo apt-get install -y dotnet-sdk-6.0')
+
+dbeaver_deb_url = 'https://dbeaver.io/files/22.0.5/dbeaver-ce_22.0.5_amd64.deb'
+dbeaver_deb_name = 'dbeaver-ce_22.0.5_amd64.deb'
+dbeaver_deb_path = installers_dir_path + '/' + dbeaver_deb_name
+logger.info(f'  Download Debeaver .deb file from \'{dbeaver_deb_url} to {dbeaver_deb_path}\'...')
+if not os.path.exists(dbeaver_deb_path): # verify md5sum?
+    with urllib.request.urlopen(dbeaver_deb_url) as response:
+        with open(dbeaver_deb_path, 'wb+') as dbeaver_deb_file:
+            shutil.copyfileobj(response, dbeaver_deb_file)
+    logger.info('  > Downloaded sucessfully')
+else:
+    logger.info('  > Already downloaded')
+
+logger.info(f'  Install DBeaver Community...')
+execute_command_in_bash(f'sudo apt-get install -y {dbeaver_deb_path}')
