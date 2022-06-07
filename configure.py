@@ -120,12 +120,12 @@ logger.info(f'> Configuration applied successfully')
 
 logger.info(f'Install Docker-Compose')
 docker_compose_bin_path = '/usr/local/bin/docker-compose'
-if not os.path.exists(docker_repo_configuration_file_path):
-    bash(f'sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o {docker_repo_configuration_file_path}')    
+if not os.path.exists(docker_compose_bin_path):
+    bash(f'sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o {docker_compose_bin_path}')    
     logger.info('  > Downloaded sucessfully')
 else:
     logger.info('  > Download already done')
-bash(f'sudo chmod +x {docker_repo_configuration_file_path}')
+bash(f'sudo chmod +x {docker_compose_bin_path}')
 logger.info(f'> Installed successfully...')
 
 logger.info(f'Install Git...')
