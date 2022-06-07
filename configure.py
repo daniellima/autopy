@@ -58,6 +58,21 @@ create_folder(configuration_path)
 create_folder(installers_path)
 create_folder(code_path)
 
+logger.info('Install from built in repositories')
+apps = [
+    "apt-transport-https ca-certificates curl gnupg lsb-release", # for docker
+    "git",
+    "htop",
+    "net-tools",
+    "jq",
+    "meld"
+]
+bash(f'sudo apt-get install -y {" ".join(apps)}')
+
+logger.info('Install Postman')
+bash('sudo snap install postman')
+logger.info('> Installed successfully')
+
 logger.info(f'Install latest version of VS Code...')
 vscode_deb_url = 'https://go.microsoft.com/fwlink/?LinkID=760868'
 vscode_deb_path = os.path.join(installers_path, 'code_1.46.1-1592428892_amd64.deb')
@@ -93,9 +108,6 @@ bash('cp vscode/settings.json ~/.config/Code/User/settings.json')
 logger.info('> Custom configuration set')
 
 # Instruction from https://docs.docker.com/engine/install/ubuntu/
-logger.info(f'Setup Docker repositories...')
-bash('sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release')
-
 docker_keyring_path = '/usr/share/keyrings/docker-archive-keyring.gpg';
 if not os.path.exists(docker_keyring_path):
     bash(f'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o {docker_keyring_path}')
@@ -123,10 +135,6 @@ bash(f'sudo cp {docker_compose_installer_path} {docker_compose_bin_path}')
 bash(f'sudo chmod +x {docker_compose_bin_path}')
 logger.info(f'> Installed successfully...')
 
-logger.info(f'Install Git...')
-bash('sudo apt-get install -y git')
-logger.info(f'> Installed successfully')
-
 gitconfig_path = os.path.join(home_path, '.gitconfig')
 logger.info(f'Creating .gitconfig file at \'{gitconfig_path}\'')
 
@@ -140,18 +148,6 @@ git_repo_urls = [
 
 for repo_url in git_repo_urls:
     clone_git_repo(repo_url, code_path)
-
-logger.info('Install net-tools')
-bash('sudo apt-get install -y net-tools')
-logger.info('> Installed successfully')
-
-logger.info('Install htop')
-bash('sudo apt-get install -y htop')
-logger.info('> Installed successfully')
-
-logger.info('Install Postman')
-bash('sudo snap install postman')
-logger.info('> Installed successfully')
 
 logger.info('Disable Xfce4 locking the screen after the VM is idle for sometime')
 # It's not necessary, since the Host SO will ask for password in the lock screen after being idle for sometime
@@ -170,10 +166,6 @@ logger.info('> Configuration done')
 logger.info('Windows Key open Application Menu (Whisker Menu)')
 bash('xfconf-query -c xfce4-keyboard-shortcuts -p /commands/custom/Super_L --create -t string -s xfce4-popup-whiskermenu')
 logger.info('> Configuration done')
-
-logger.info('Install Meld')
-bash('sudo apt-get install -y meld')
-logger.info('> Installed successfully')
 
 logger.info('Install Kubectl')
 bash('sudo snap install kubectl --classic')
@@ -250,10 +242,6 @@ logger.info(f'> Installed successfully...')
 
 logger.info(f'Install NVM...')
 bash('curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash')
-logger.info(f'> Installed successfully...')
-
-logger.info(f'Install jq...')
-bash('sudo apt-get install -y jq')
 logger.info(f'> Installed successfully...')
 
 logger.info(f'Installing .NET 6 SDK')
