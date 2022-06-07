@@ -35,12 +35,21 @@ def clone_git_repo(repo_url, clone_path):
     else:
         logger.info('> Already exists')
 
-def download(from_url, to_file):
-    if not os.path.exists(to_file):
-        bash(f'curl -L "{from_url}" -o {to_file}')
+def download(from_url, to_file_name=None):
+    global downloads_path
+
+    if to_file_name is None:
+        to_file_name = os.path.basename(from_url)
+
+    download_file_path = os.path.join(downloads_path, to_file_name)
+    if not os.path.exists(download_file_path):
+        bash(f'curl -L "{from_url}" -o {download_file_path}')
         logger.info('  > Downloaded sucessfully')
+        return download_file_path, True
     else:
         logger.info('  > Download already done')
+        return download_file_path, False
+
 
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s %(asctime)s - %(name)s: %(message)s')
 logger = logging.getLogger(__name__)
@@ -48,14 +57,14 @@ logger = logging.getLogger(__name__)
 home_path = str(Path.home())
 files_path = os.path.join(home_path, 'files')
 configuration_path = os.path.join(home_path, 'configuration')
-installers_path = os.path.join(configuration_path, 'installers')
+downloads_path = os.path.join(configuration_path, 'downloads')
 code_path = os.path.join(files_path, 'code')
 
 logger.info(f'Home is {home_path}')
 
 create_folder(files_path)
 create_folder(configuration_path)
-create_folder(installers_path)
+create_folder(downloads_path)
 create_folder(code_path)
 
 logger.info('Install from built in repositories')
@@ -74,14 +83,12 @@ bash('sudo snap install postman')
 logger.info('> Installed successfully')
 
 logger.info(f'Install latest version of VS Code...')
-vscode_deb_url = 'https://go.microsoft.com/fwlink/?LinkID=760868'
-vscode_deb_path = os.path.join(installers_path, 'code_1.46.1-1592428892_amd64.deb')
-if not os.path.exists(vscode_deb_path):
-    logger.info(f'  Download VS Code...')
-    download(vscode_deb_url, vscode_deb_path)
+logger.info(f'  Download VS Code...')
+vscode_deb_path, downloaded = download('https://go.microsoft.com/fwlink/?LinkID=760868', 'code_1.46.1-1592428892_amd64.deb')
+if downloaded:
     logger.info(f'  Install VS Code...')
     bash(f'sudo apt-get install -y {vscode_deb_path}')
-    logger.info(f'  > Installed successfully')
+logger.info(f'  > Installed successfully')
 
 logger.info(f'  Ensure VS Code is in latest version...')
 bash('sudo apt-get install -y code')
@@ -127,11 +134,9 @@ bash('sudo usermod -aG docker $USER')
 logger.info(f'> Configuration applied successfully')
 
 logger.info(f'Install Docker-Compose')
-docker_compose_url = 'https://github.com/docker/compose/releases/download/v2.6.0/docker-compose-linux-x86_64'
-docker_compose_installer_path = os.path.join(installers_path, 'docker-compose')
 docker_compose_bin_path = '/usr/local/bin/docker-compose'
-download(docker_compose_url, docker_compose_installer_path)
-bash(f'sudo cp {docker_compose_installer_path} {docker_compose_bin_path}')
+docker_compose_path, _ = download('https://github.com/docker/compose/releases/download/v2.6.0/docker-compose-linux-x86_64')
+bash(f'sudo cp {docker_compose_path} {docker_compose_bin_path}')
 bash(f'sudo chmod +x {docker_compose_bin_path}')
 logger.info(f'> Installed successfully...')
 
@@ -176,10 +181,8 @@ bash('kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/n
 logger.info('> Successfully configured kubectl bash completion')
 
 logger.info('Install AWS CLI')
-awscli_installer_dir_path = os.path.join(installers_path, 'aws')
+awscli_installer_dir_path = os.path.join(downloads_path, 'aws')
 awscli_unzipped_path = os.path.join(awscli_installer_dir_path, 'aws')
-awscli_zip_path = os.path.join(awscli_installer_dir_path, 'awscliv2.zip')
-
 create_folder(awscli_installer_dir_path)
 logger.info(' > Installing AWS CLI')
 if os.path.exists('/usr/local/bin/aws'):
@@ -187,7 +190,7 @@ if os.path.exists('/usr/local/bin/aws'):
 else:
     logger.info(' > Download AWS CLI Zip')
 
-    download('https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip', awscli_zip_path)
+    awscli_zip_path, _ = download('https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip')
     bash(f'rm -r {awscli_unzipped_path}')
     bash(f'unzip {awscli_zip_path} -d {awscli_installer_dir_path}')
     bash(f'sudo {awscli_unzipped_path}/install')
@@ -196,16 +199,14 @@ else:
 logger.info('> Successfully installed')
 
 logger.info(f'  Download Lens...')
-lens_deb_url = 'https://api.k8slens.dev/binaries/Lens-5.2.6-latest.20211104.1.amd64.deb'
-lens_deb_path = os.path.join(installers_path, 'Lens-5.2.6-latest.20211104.1.amd64.deb')
-download(lens_deb_url, lens_deb_path)
+lens_deb_path, _ = download('https://api.k8slens.dev/binaries/Lens-5.2.6-latest.20211104.1.amd64.deb')
 logger.info(f'  Install Lens...')
 bash(f'sudo apt-get install -y {lens_deb_path}')
 
 logger.info('Install tfenv')
-clone_git_repo('https://github.com/tfutils/tfenv.git', installers_path)
+clone_git_repo('https://github.com/tfutils/tfenv.git', downloads_path)
 
-tfenv_repository_path = os.path.join(installers_path, 'tfenv')
+tfenv_repository_path = os.path.join(downloads_path, 'tfenv')
 logger.info('> Add tfenv to path')
 if not os.path.exists('/usr/local/bin/tfenv'):
     bash(f'sudo ln -s {tfenv_repository_path}/bin/tfenv /usr/local/bin')
@@ -245,17 +246,14 @@ bash('curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh |
 logger.info(f'> Installed successfully...')
 
 logger.info(f'Installing .NET 6 SDK')
-dotnet_deb_file_path = os.path.join(installers_path, 'packages-microsoft-prod.deb')
-if not os.path.exists(dotnet_deb_file_path):
-    download('https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb', dotnet_deb_file_path)
-    bash(f'sudo dpkg -i {dotnet_deb_file_path}')
+dotnet_deb_path, downloaded = download('https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb')
+if downloaded:
+    bash(f'sudo dpkg -i {dotnet_deb_path}')
     bash('sudo apt-get update')
 bash('sudo apt-get install -y dotnet-sdk-6.0')
 
 logger.info(f'  Download DBeaver Community...')
-dbeaver_deb_url = 'https://dbeaver.io/files/22.1.0/dbeaver-ce_22.1.0_amd64.deb'
-dbeaver_deb_path = os.path.join(installers_path, 'dbeaver-ce_22.1.0_amd64.deb')
-download(dbeaver_deb_url, dbeaver_deb_path)
+dbeaver_deb_path, _ = download('https://dbeaver.io/files/22.1.0/dbeaver-ce_22.1.0_amd64.deb')
 
 logger.info(f'  Install DBeaver Community...')
 bash(f'sudo apt-get install -y {dbeaver_deb_path}')
