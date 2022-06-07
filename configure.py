@@ -1,7 +1,5 @@
 import os
 import logging
-import urllib.request
-import shutil
 import re
 import subprocess
 from pathlib import Path
@@ -37,6 +35,13 @@ def clone_git_repo(repo_url, clone_path):
     else:
         logger.info('> Already exists')
 
+def download(from_url, to_file):
+    if not os.path.exists(to_file):
+        bash(f'curl -L "{from_url}" -o {to_file}')
+        logger.info('  > Downloaded sucessfully')
+    else:
+        logger.info('  > Download already done')
+
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s %(asctime)s - %(name)s: %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -54,20 +59,11 @@ create_folder(installers_path)
 create_folder(code_path)
 
 logger.info(f'Install latest version of VS Code...')
-completed_process = subprocess.run(['dpkg', '-s', 'code'], capture_output=True, text=True)
-if completed_process.returncode != 0:
-    vscode_deb_url = 'https://go.microsoft.com/fwlink/?LinkID=760868'
-    vscode_deb_name = 'code_1.46.1-1592428892_amd64.deb'
-    vscode_deb_path = installers_path + '/' + vscode_deb_name
-    logger.info(f'  Download VS Code .deb file from \'{vscode_deb_url} to {vscode_deb_path}\'...')
-    if not os.path.exists(vscode_deb_path): # verify md5sum?
-        with urllib.request.urlopen(vscode_deb_url) as response:
-            with open(vscode_deb_path, 'wb+') as vscode_deb_file:
-                shutil.copyfileobj(response, vscode_deb_file)
-        logger.info('  > Downloaded sucessfully')
-    else:
-        logger.info('  > Already downloaded')
-
+vscode_deb_url = 'https://go.microsoft.com/fwlink/?LinkID=760868'
+vscode_deb_path = os.path.join(installers_path, 'code_1.46.1-1592428892_amd64.deb')
+if not os.path.exists(vscode_deb_path):
+    logger.info(f'  Download VS Code...')
+    download(vscode_deb_url, vscode_deb_path)
     logger.info(f'  Install VS Code...')
     bash(f'sudo apt-get install -y {vscode_deb_path}')
     logger.info(f'  > Installed successfully')
@@ -119,12 +115,11 @@ bash('sudo usermod -aG docker $USER')
 logger.info(f'> Configuration applied successfully')
 
 logger.info(f'Install Docker-Compose')
+docker_compose_url = 'https://github.com/docker/compose/releases/download/v2.6.0/docker-compose-linux-x86_64'
+docker_compose_installer_path = os.path.join(installers_path, 'docker-compose')
 docker_compose_bin_path = '/usr/local/bin/docker-compose'
-if not os.path.exists(docker_compose_bin_path):
-    bash(f'sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o {docker_compose_bin_path}')    
-    logger.info('  > Downloaded sucessfully')
-else:
-    logger.info('  > Download already done')
+download(docker_compose_url, docker_compose_installer_path)
+bash(f'sudo cp {docker_compose_installer_path} {docker_compose_bin_path}')
 bash(f'sudo chmod +x {docker_compose_bin_path}')
 logger.info(f'> Installed successfully...')
 
@@ -189,45 +184,29 @@ bash('kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/n
 logger.info('> Successfully configured kubectl bash completion')
 
 logger.info('Install AWS CLI')
-awscli_installer_dir_path = installers_path + '/aws'
-awscli_unzipped_path = f'{awscli_installer_dir_path}/aws'
-logger.info(f' > Creating \'{awscli_installer_dir_path}\'')
-if not os.path.exists(awscli_installer_dir_path):
-    os.mkdir(awscli_installer_dir_path)
-    logger.info(' > Created')
-else:
-    logger.info(' > Already exists')
+awscli_installer_dir_path = os.path.join(installers_path, 'aws')
+awscli_unzipped_path = os.path.join(awscli_installer_dir_path, 'aws')
+awscli_zip_path = os.path.join(awscli_installer_dir_path, 'awscliv2.zip')
+
+create_folder(awscli_installer_dir_path)
 logger.info(' > Installing AWS CLI')
 if os.path.exists('/usr/local/bin/aws'):
     logger.info(' > Already installed')
 else:
     logger.info(' > Download AWS CLI Zip')
-    awscli_zip_path = awscli_installer_dir_path + '/awscliv2.zip'
-    if not os.path.exists(awscli_zip_path):
-        bash(f'curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "{awscli_zip_path}"')
-        logger.info(' > Downloaded AWS CLI Zip')
-    else:
-        logger.info(' > Already exists')
-    
-    if not os.path.exists(awscli_unzipped_path):
-        bash(f'unzip {awscli_zip_path} -d {awscli_installer_dir_path}')
-    
+
+    download('https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip', awscli_zip_path)
+    bash(f'rm -r {awscli_unzipped_path}')
+    bash(f'unzip {awscli_zip_path} -d {awscli_installer_dir_path}')
     bash(f'sudo {awscli_unzipped_path}/install')
+
     logger.info(' > Successfully installed')
 logger.info('> Successfully installed')
 
+logger.info(f'  Download Lens...')
 lens_deb_url = 'https://api.k8slens.dev/binaries/Lens-5.2.6-latest.20211104.1.amd64.deb'
-lens_deb_name = 'Lens-5.2.6-latest.20211104.1.amd64.deb'
-lens_deb_path = installers_path + '/' + lens_deb_name
-logger.info(f'  Download Lens .deb file from \'{lens_deb_url} to {lens_deb_path}\'...')
-if not os.path.exists(lens_deb_path): # verify md5sum?
-    with urllib.request.urlopen(lens_deb_url) as response:
-        with open(lens_deb_path, 'wb+') as lens_deb_file:
-            shutil.copyfileobj(response, lens_deb_file)
-    logger.info('  > Downloaded sucessfully')
-else:
-    logger.info('  > Already downloaded')
-
+lens_deb_path = os.path.join(installers_path, 'Lens-5.2.6-latest.20211104.1.amd64.deb')
+download(lens_deb_url, lens_deb_path)
 logger.info(f'  Install Lens...')
 bash(f'sudo apt-get install -y {lens_deb_path}')
 
@@ -280,22 +259,15 @@ logger.info(f'> Installed successfully...')
 logger.info(f'Installing .NET 6 SDK')
 dotnet_deb_file_path = os.path.join(installers_path, 'packages-microsoft-prod.deb')
 if not os.path.exists(dotnet_deb_file_path):
-    bash(f'wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O {dotnet_deb_file_path}')
+    download('https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb', dotnet_deb_file_path)
     bash(f'sudo dpkg -i {dotnet_deb_file_path}')
     bash('sudo apt-get update')
 bash('sudo apt-get install -y dotnet-sdk-6.0')
 
-dbeaver_deb_url = 'https://dbeaver.io/files/22.0.5/dbeaver-ce_22.0.5_amd64.deb'
-dbeaver_deb_name = 'dbeaver-ce_22.0.5_amd64.deb'
-dbeaver_deb_path = installers_path + '/' + dbeaver_deb_name
-logger.info(f'  Download Debeaver .deb file from \'{dbeaver_deb_url} to {dbeaver_deb_path}\'...')
-if not os.path.exists(dbeaver_deb_path): # verify md5sum?
-    with urllib.request.urlopen(dbeaver_deb_url) as response:
-        with open(dbeaver_deb_path, 'wb+') as dbeaver_deb_file:
-            shutil.copyfileobj(response, dbeaver_deb_file)
-    logger.info('  > Downloaded sucessfully')
-else:
-    logger.info('  > Already downloaded')
+logger.info(f'  Download DBeaver Community...')
+dbeaver_deb_url = 'https://dbeaver.io/files/22.1.0/dbeaver-ce_22.1.0_amd64.deb'
+dbeaver_deb_path = os.path.join(installers_path, 'dbeaver-ce_22.1.0_amd64.deb')
+download(dbeaver_deb_url, dbeaver_deb_path)
 
 logger.info(f'  Install DBeaver Community...')
 bash(f'sudo apt-get install -y {dbeaver_deb_path}')
