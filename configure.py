@@ -69,26 +69,12 @@ if completed_process.returncode != 0:
         logger.info('  > Already downloaded')
 
     logger.info(f'  Install VS Code...')
-    completed_process = subprocess.run(['sudo', 'apt-get', 'install', '-y', vscode_deb_path], capture_output=True, text=True)
-    if completed_process.returncode == 0:
-        logger.info(f'  > Installed successfully')
-    else:
-        logger.info(f'  > An error happened while installing')
-        logger.info(f'  Return Code: {completed_process.returncode}')
-        logger.info(f'  Stdout: \'{completed_process.stdout}\'')
-        logger.info(f'  Stderr: \'{completed_process.stderr}\'')
-        exit(1)
+    bash(f'sudo apt-get install -y {vscode_deb_path}')
+    logger.info(f'  > Installed successfully')
 
 logger.info(f'  Ensure VS Code is in latest version...')
-completed_process = subprocess.run(['sudo', 'apt-get', 'install', '-y', 'code'], capture_output=True, text=True)
-if completed_process.returncode == 0:
-    logger.info(f'  > Updated successfully')
-else:
-    logger.info(f'  > An error happened while updating')
-    logger.info(f'  Return Code: {completed_process.returncode}')
-    logger.info(f'  Stdout: \'{completed_process.stdout}\'')
-    logger.info(f'  Stderr: \'{completed_process.stderr}\'')
-    exit(1)
+bash('sudo apt-get install -y code')
+logger.info(f'  > Updated successfully')
 logger.info(f'> VS Code is in the latest version.')
 
 # VS Code extension ids can be found on the 'Identifier field'
@@ -143,15 +129,8 @@ bash(f'sudo chmod +x {docker_repo_configuration_file_path}')
 logger.info(f'> Installed successfully...')
 
 logger.info(f'Install Git...')
-completed_process = subprocess.run(['sudo', 'apt-get', 'install', '-y', 'git'], capture_output=True, text=True)
-if completed_process.returncode == 0:
-    logger.info(f'> Installed successfully')
-else:
-    logger.info(f'> An error happened while installing')
-    logger.info(f'Return Code: {completed_process.returncode}')
-    logger.info(f'Stdout: \'{completed_process.stdout}\'')
-    logger.info(f'Stderr: \'{completed_process.stderr}\'')
-    exit(1)
+completed_process = bash('sudo apt-get install -y git')
+logger.info(f'> Installed successfully')
 
 gitconfig_path = home_path + '/' + '.gitconfig'
 gitconfig_content = (
@@ -272,22 +251,9 @@ logger.info(f'  Install Lens...')
 bash(f'sudo apt-get install -y {lens_deb_path}')
 
 logger.info('Install tfenv')
-tfenv_repository_url = 'https://github.com/tfutils/tfenv.git'
-tfenv_repository_path = installers_path + '/' + 'tfenv'
-logger.info(f"> Clone tfenv repository on \'{tfenv_repository_path}\'...")
-if not os.path.exists(tfenv_repository_path):
-    completed_process = subprocess.run(['git', 'clone', tfenv_repository_url, tfenv_repository_path], capture_output=True, text=True)
-    if completed_process.returncode == 0:
-        logger.info(f'> Cloned successfully')
-    else:
-        logger.info(f'> An error happened while cloning')
-        logger.info(f'Return Code: {completed_process.returncode}')
-        logger.info(f'Stdout: \'{completed_process.stdout}\'')
-        logger.info(f'Stderr: \'{completed_process.stderr}\'')
-        exit(1)
-else:
-    logger.info('> Already exists')
+clone_git_repo('https://github.com/tfutils/tfenv.git', installers_path)
 
+tfenv_repository_path = os.path.join(installers_path, 'tfenv')
 logger.info('> Add tfenv to path')
 if not os.path.exists('/usr/local/bin/tfenv'):
     bash(f'sudo ln -s {tfenv_repository_path}/bin/tfenv /usr/local/bin')
@@ -297,7 +263,7 @@ if not os.path.exists('/usr/local/bin/terraform'):
     bash(f'sudo ln -s {tfenv_repository_path}/bin/terraform /usr/local/bin')
     logger.info(' > Added tfenv\'s terraform to path')
 
-logger.info('> Already in path')
+logger.info('> tfenv in path')
 
 # Apparently there is not a package to install just the redis-cli.
 # So, we install the server package and disable the server installation
@@ -316,7 +282,7 @@ mongodb_repo_configuration_file_path = '/etc/apt/sources.list.d/mongodb-org-5.0.
 if not os.path.exists(mongodb_repo_configuration_file_path):
     bash(f'echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | sudo tee {mongodb_repo_configuration_file_path}')
     bash('sudo apt-get update')
-logger.info(f'> Docker repositories have been defined')
+logger.info(f'> MongoDB repositories have been defined')
 
 logger.info(f'Install MongoDB Shell and Tools...')
 bash('sudo apt-get install -y mongodb-mongosh mongodb-org-tools')
