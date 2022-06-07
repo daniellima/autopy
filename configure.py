@@ -129,33 +129,14 @@ bash(f'sudo chmod +x {docker_compose_bin_path}')
 logger.info(f'> Installed successfully...')
 
 logger.info(f'Install Git...')
-completed_process = bash('sudo apt-get install -y git')
+bash('sudo apt-get install -y git')
 logger.info(f'> Installed successfully')
 
-gitconfig_path = home_path + '/' + '.gitconfig'
-gitconfig_content = (
-    '# This is Git\'s per-user configuration file.\n'
-    '[user]\n'
-    '# Please adapt and uncomment the following lines:\n'
-    '       name = Daniel Lima\n'
-    '       email = daniellima.pessoal@gmail.com\n'
-)
-should_recreate = False
-logger.info(f'Creating .gitconfig file at \'{home_path}\'')
-if not os.path.exists(gitconfig_path):
-    should_recreate = True
-else:
-    with open(gitconfig_path, 'r') as gitconfig_file:
-        content = gitconfig_file.read()
-        if content != gitconfig_content:
-            should_recreate = True
-        else:
-            logger.info(f'> Already exists and it\'s contents are correct')
+gitconfig_path = os.path.join(home_path, '.gitconfig')
+logger.info(f'Creating .gitconfig file at \'{gitconfig_path}\'')
 
-if should_recreate:
-    with open(gitconfig_path, 'w') as gitconfig_file:
-        gitconfig_file.write(gitconfig_content)
-    logger.info(f'> File recreated sucessfully')
+bash(f'cp git/.gitconfig {gitconfig_path}')
+logger.info(f'> sucessfully defined .gitconfig')
 
 git_repo_urls = [
     'git@github.com:daniellima/autopy.git',
