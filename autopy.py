@@ -225,3 +225,10 @@ log_section('DBeaver')
 
 dbeaver_deb_path, _ = download('https://dbeaver.io/files/22.1.0/dbeaver-ce_22.1.0_amd64.deb')
 bash(f'sudo apt-get install -y {dbeaver_deb_path}')
+
+
+log_section('Load local specific commands')
+
+if not os.path.exists('local.py'):
+    bash('cp local.sample.py local.py')
+exec(open('local.py').read())
