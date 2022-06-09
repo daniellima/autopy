@@ -52,7 +52,7 @@ downloads_path = os.path.join(configuration_path, 'downloads')
 code_path = os.path.join(files_path, 'code')
 
 
-log_section('Create basic folders')
+log_section('Basic folders')
 
 create_folder(files_path)
 create_folder(configuration_path)
@@ -60,7 +60,7 @@ create_folder(downloads_path)
 create_folder(code_path)
 
 
-log_section('Install from built in repositories')
+log_section('Built in packages')
 
 apps = [
     "apt-transport-https ca-certificates curl gnupg lsb-release", # for docker
@@ -68,14 +68,31 @@ apps = [
     "htop",
     "net-tools",
     "jq",
-    "meld"
+    "meld",
+    "zsh"
 ]
 bash(f'sudo apt-get install -y {" ".join(apps)}')
 
 
-log_section('Install Postman')
+log_section('Postman')
 
 bash('sudo snap install postman')
+
+
+log_section('ZSH')
+# Makes zsh the default shell
+bash('sudo bash -c "chsh -s $(which zsh) $USER"')
+zshrc_path = os.path.join(home_path, '.zshrc')
+bash(f'touch {zshrc_path}')
+if not os.path.exists(os.path.join(home_path, '.oh-my-zsh')):
+    # using echo to respond 'no' when install script asks if I want to make zsh the default shell
+    bash('echo n | sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"')
+# oh my zsh installation overrides the .zshrc file. So we set it after installing oh my zsh
+bash(f'cat zsh/.zshrc zsh/zsh_conf.sh zsh/git_alias.sh > {zshrc_path}')
+# install custom theme
+zsh_custom_path = bash('zsh -ic \'echo $ZSH_CUSTOM\'').stdout.strip()
+zsh_theme_path = os.path.join(zsh_custom_path, 'themes')
+clone_git_repo('https://github.com/reobin/typewritten.git', zsh_theme_path)
 
 
 log_section('VS Code')
