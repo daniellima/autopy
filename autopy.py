@@ -88,7 +88,7 @@ if not os.path.exists(os.path.join(home_path, '.oh-my-zsh')):
     # using echo to respond 'no' when install script asks if I want to make zsh the default shell
     bash('echo n | sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"')
 # oh my zsh installation overrides the .zshrc file. So we set it after installing oh my zsh
-bash(f'cat zsh/.zshrc zsh/zsh_conf.sh zsh/git_alias.sh > {zshrc_path}')
+bash(f'cat zsh/.zshrc zsh/zsh_conf.sh zsh/git_alias.sh zsh/docker_compose_alias.sh > {zshrc_path}')
 # install custom theme
 zsh_custom_path = bash('zsh -ic \'echo $ZSH_CUSTOM\'').stdout.strip()
 zsh_theme_path = os.path.join(zsh_custom_path, 'themes')
