@@ -1,4 +1,6 @@
 {
     "workbench.editor.enablePreview": false,
-    "files.autoSave": "afterDelay"
+    "files.autoSave": "afterDelay",
+    "window.title": "${rootName}${separator}${dirty}${activeEditorShort}${separator}${appName}",
+    "explorer.autoReveal": false
 }
