@@ -90,7 +90,7 @@ if not os.path.exists(os.path.join(home_path, '.oh-my-zsh')):
 # oh my zsh installation overrides the .zshrc file. So we set it after installing oh my zsh
 bash(f'cat zsh/.zshrc zsh/zsh_conf.sh zsh/git_alias.sh zsh/docker_compose_alias.sh > {zshrc_path}')
 # install custom theme
-zsh_custom_path = bash('zsh -ic \'echo $ZSH_CUSTOM\'').stdout.strip()
+zsh_custom_path = bash('zsh -ic \'echo $ZSH_CUSTOM\'').stdout.split()[-1].strip()
 zsh_theme_path = os.path.join(zsh_custom_path, 'themes')
 clone_git_repo('https://github.com/reobin/typewritten.git', zsh_theme_path)
 
@@ -182,7 +182,7 @@ awscli_unzipped_path = os.path.join(awscli_installer_dir_path, 'aws')
 create_folder(awscli_installer_dir_path)
 if not os.path.exists('/usr/local/bin/aws'):
     awscli_zip_path, _ = download('https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip')
-    bash(f'rm -r {awscli_unzipped_path}')
+    bash(f'rm -rf {awscli_unzipped_path}')
     bash(f'unzip {awscli_zip_path} -d {awscli_installer_dir_path}')
     bash(f'sudo {awscli_unzipped_path}/install')
 
