@@ -109,7 +109,8 @@ vscode_extensions = [
     ('Docker', 'ms-azuretools.vscode-docker'),
     ('Terraform', 'hashicorp.terraform'),
     ('Prisma', 'prisma.prisma'),
-    ('C#', 'ms-dotnettools.csharp')
+    ('C#', 'ms-dotnettools.csharp'),
+    ('Go', 'golang.go')
 ]
 for extension in vscode_extensions:
     bash(f'code --install-extension {extension[1]}')
@@ -146,6 +147,7 @@ bash(f'cp git/.gitconfig {gitconfig_path}')
 git_repo_urls = [
     'git@github.com:daniellima/autopy.git',
     'git@github.com:daniellima/awesome-links-generator.git',
+    'git@github.com:daniellima/snippets.git'
 ]
 
 for repo_url in git_repo_urls:
@@ -242,6 +244,13 @@ log_section('DBeaver')
 
 dbeaver_deb_path, _ = download('https://dbeaver.io/files/22.1.0/dbeaver-ce_22.1.0_amd64.deb')
 bash(f'sudo apt-get install -y {dbeaver_deb_path}')
+
+
+log_section('Download Go')
+
+go_tar_path, _ = download('https://go.dev/dl/go1.19.1.linux-amd64.tar.gz')
+bash('sudo rm -rf /usr/local/go')
+bash(f'sudo tar -C /usr/local -xzf {go_tar_path}')
 
 
 log_section('Load local specific commands')
