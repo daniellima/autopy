@@ -69,7 +69,9 @@ apps = [
     "net-tools",
     "jq",
     "meld",
-    "zsh"
+    "zsh",
+    "make",
+    "fzf"
 ]
 bash(f'sudo apt-get install -y {" ".join(apps)}')
 
@@ -173,6 +175,14 @@ log_section('Kubectl')
 bash('sudo snap install kubectl --classic')
 # Configure kubectl autocompletion
 bash('kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null')
+
+kubectx_path, _ = download("https://github.com/ahmetb/kubectx/raw/master/kubectx")
+bash(f'sudo mv {kubectx_path} /usr/local/bin')
+bash(f'sudo chmod +x /usr/local/bin/kubectx')
+
+kubens_path, _ = download("https://github.com/ahmetb/kubectx/raw/master/kubens")
+bash(f'sudo mv {kubens_path} /usr/local/bin')
+bash(f'sudo chmod +x /usr/local/bin/kubens')
 
 
 log_section('AWS CLI')
