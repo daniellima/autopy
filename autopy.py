@@ -191,7 +191,7 @@ if not os.path.exists('/usr/local/bin/aws'):
 
 log_section('Lens')
 
-lens_deb_path, _ = download('https://api.k8slens.dev/binaries/Lens-5.2.6-latest.20211104.1.amd64.deb')
+lens_deb_path, _ = download('https://downloads.k8slens.dev/ide/Lens-2022.10.131529-latest.amd64.deb')
 bash(f'sudo apt-get install -y {lens_deb_path}')
 
 
