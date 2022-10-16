@@ -166,8 +166,6 @@ bash('xfconf-query -c xfce4-power-manager -p /xfce4-power-manager/lock-screen-su
 bash('xfconf-query -c xfce4-screensaver -p /lock/enabled -s false')
 # Disable window dragging with alt+click')
 bash('xfconf-query -c xfwm4 -p /general/easy_click -s none')
-# Windows Key open Application Menu (Whisker Menu)
-bash('xfconf-query -c xfce4-keyboard-shortcuts -p /commands/custom/Super_L --create -t string -s xfce4-popup-whiskermenu')
 
 
 log_section('Kubectl')
@@ -252,6 +250,15 @@ go_tar_path, _ = download('https://go.dev/dl/go1.19.1.linux-amd64.tar.gz')
 bash('sudo rm -rf /usr/local/go')
 bash(f'sudo tar -C /usr/local -xzf {go_tar_path}')
 
+
+log_section('Install Brave Browser')
+
+bash('sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg')
+brave_configuration_file_path = '/etc/apt/sources.list.d/brave-browser-release.list'
+if not os.path.exists(brave_configuration_file_path):
+    bash(f'echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main"|sudo tee {brave_configuration_file_path}')
+    bash('sudo apt-get update')
+bash('sudo apt install -y brave-browser')
 
 log_section('Load local specific commands')
 
