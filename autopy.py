@@ -260,6 +260,12 @@ if not os.path.exists(brave_configuration_file_path):
     bash('sudo apt-get update')
 bash('sudo apt install -y brave-browser')
 
+
+log_section('Install Bitwarden')
+
+bash('sudo snap install bitwarden')
+
+
 log_section('Load local specific commands')
 
 if not os.path.exists('local.py'):
