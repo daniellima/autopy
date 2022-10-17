@@ -203,17 +203,6 @@ lens_deb_path, _ = download('https://downloads.k8slens.dev/ide/Lens-2022.10.1315
 bash(f'sudo apt-get install -y {lens_deb_path}')
 
 
-log_section('Terraform')
-
-clone_git_repo('https://github.com/tfutils/tfenv.git', downloads_path)
-
-tfenv_repository_path = os.path.join(downloads_path, 'tfenv')
-if not os.path.exists('/usr/local/bin/tfenv'):
-    bash(f'sudo ln -s {tfenv_repository_path}/bin/tfenv /usr/local/bin')
-if not os.path.exists('/usr/local/bin/terraform'):
-    bash(f'sudo ln -s {tfenv_repository_path}/bin/terraform /usr/local/bin')
-
-
 log_section('Redis')
 
 # Apparently there is not a package to install just the redis-cli.
@@ -274,6 +263,30 @@ bash('sudo apt install -y brave-browser')
 log_section('Install Bitwarden')
 
 bash('sudo snap install bitwarden')
+
+
+log_section('Terraform')
+
+clone_git_repo('https://github.com/tfutils/tfenv.git', downloads_path)
+
+tfenv_repository_path = os.path.join(downloads_path, 'tfenv')
+if not os.path.exists('/usr/local/bin/tfenv'):
+    bash(f'sudo ln -s {tfenv_repository_path}/bin/tfenv /usr/local/bin')
+if not os.path.exists('/usr/local/bin/terraform'):
+    bash(f'sudo ln -s {tfenv_repository_path}/bin/terraform /usr/local/bin')
+
+bash('go install github.com/terraform-docs/terraform-docs@v0.16.0')
+
+
+log_section('Install K6')
+
+bash('sudo gpg -k') # Ensure that GPG folder is created. See: https://k6.io/docs/getting-started/installation/troubleshooting/#error-importing-k6s-gpg-key
+bash('sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69')
+source_list_file = '/etc/apt/sources.list.d/k6.list'
+if not os.path.exists(source_list_file):
+    bash(f'echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee {source_list_file}')
+    bash('sudo apt-get update')
+bash('sudo apt-get install k6')
 
 
 log_section('Load local specific commands')
