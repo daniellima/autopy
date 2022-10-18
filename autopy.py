@@ -71,7 +71,8 @@ apps = [
     "meld",
     "zsh",
     "make",
-    "fzf"
+    "fzf",
+    "python3-pip"
 ]
 bash(f'sudo apt-get install -y {" ".join(apps)}')
 
@@ -287,6 +288,21 @@ if not os.path.exists(source_list_file):
     bash(f'echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee {source_list_file}')
     bash('sudo apt-get update')
 bash('sudo apt-get install k6')
+
+
+log_section('Install Kind')
+
+bash('go install sigs.k8s.io/kind@v0.16.0')
+
+
+log_section('Install Tilt')
+
+bash('curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash')
+
+
+log_section('Install pre-commit')
+
+bash('sudo pip3 install pre-commit')
 
 
 log_section('Load local specific commands')
