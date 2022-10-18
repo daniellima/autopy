@@ -305,6 +305,16 @@ log_section('Install pre-commit')
 bash('sudo pip3 install pre-commit')
 
 
+log_section("Install go-migrate")
+
+bash('go install -tags \'postgres\' github.com/golang-migrate/migrate/v4/cmd/migrate@v4.15.2')
+
+
+log_section('Install Helm')
+
+bash('sudo snap install helm --classic')
+
+
 log_section('Load local specific commands')
 
 if not os.path.exists('local.py'):
