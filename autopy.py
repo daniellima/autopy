@@ -72,7 +72,8 @@ apps = [
     "zsh",
     "make",
     "fzf",
-    "python3-pip"
+    "python3-pip",
+    "postgresql-client"
 ]
 bash(f'sudo apt-get install -y {" ".join(apps)}')
 
@@ -313,6 +314,10 @@ bash('go install -tags \'postgres\' github.com/golang-migrate/migrate/v4/cmd/mig
 log_section('Install Helm')
 
 bash('sudo snap install helm --classic')
+
+log_section('Install aws2-wrap')
+
+bash('sudo pip3 install aws2-wrap')
 
 
 log_section('Load local specific commands')
