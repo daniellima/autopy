@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Name=Postman
+Comment=Postman Native App
+Exec={{POSTMANPATH}}/Postman/app/Postman — %u
+Icon={{POSTMANPATH}}/Postman/app/resources/app/assets/icon.png
+Terminal=false
+StartupWMClass=postman
+Type=Application
+Categories=Network;
+MimeType=x-scheme-handler/tg;
+X-Desktop-File-Install-Version=0.22

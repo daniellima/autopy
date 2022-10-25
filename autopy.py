@@ -80,7 +80,16 @@ bash(f'sudo apt-get install -y {" ".join(apps)}')
 
 log_section('Postman')
 
-bash('sudo snap install postman')
+# Stopped using the snap install because it's really outdated
+# See: https://github.com/postmanlabs/postman-app-support/issues/9573
+# bash('sudo snap install postman')
+postman_download_path, _ = download('https://dl.pstmn.io/download/latest/linux64', 'postman-linux-x64.tar.gz')
+bash(f'tar -zxvf {postman_download_path} -C {configuration_path}')
+with open('postman/postman.desktop', 'r') as f:
+    content = f.read()
+content = content.replace('{{POSTMANPATH}}', configuration_path)
+with open(f'{home_path}/.local/share/applications/postman.desktop', 'w') as f:
+    f.write(content)
 
 
 log_section('ZSH')
@@ -158,18 +167,19 @@ for repo_url in git_repo_urls:
     clone_git_repo(repo_url, code_path)
 
 
-log_section('XFCE 4')
+# log_section('XFCE 4')
 
-# Disable Xfce4 locking the screen after the VM is idle for sometime
-# It's not necessary, since the Host SO will ask for password in the lock screen after being idle for sometime
-# these next commands came from here: https://askubuntu.com/questions/259190/xubuntu-no-password-request-after-suspension
-bash('xfconf-query -c xfce4-session -p /shutdown/LockScreen -s false')
-bash('xfconf-query -c xfce4-power-manager -p /xfce4-power-manager/lock-screen-suspend-hibernate -s false')
-# disable screen saver lock screen
-# came from here: https://askubuntu.com/a/1263959
-bash('xfconf-query -c xfce4-screensaver -p /lock/enabled -s false')
-# Disable window dragging with alt+click')
-bash('xfconf-query -c xfwm4 -p /general/easy_click -s none')
+
+# # Disable Xfce4 locking the screen after the VM is idle for sometime
+# # It's not necessary, since the Host SO will ask for password in the lock screen after being idle for sometime
+# # these next commands came from here: https://askubuntu.com/questions/259190/xubuntu-no-password-request-after-suspension
+# bash('xfconf-query -c xfce4-session -p /shutdown/LockScreen -s false')
+# bash('xfconf-query -c xfce4-power-manager -p /xfce4-power-manager/lock-screen-suspend-hibernate -s false')
+# # disable screen saver lock screen
+# # came from here: https://askubuntu.com/a/1263959
+# bash('xfconf-query -c xfce4-screensaver -p /lock/enabled -s false')
+# # Disable window dragging with alt+click')
+# bash('xfconf-query -c xfwm4 -p /general/easy_click -s none')
 
 
 log_section('Kubectl')
