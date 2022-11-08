@@ -251,7 +251,7 @@ bash('sudo apt-get install -y dotnet-sdk-6.0')
 
 log_section('DBeaver')
 
-dbeaver_deb_path, _ = download('https://dbeaver.io/files/22.1.0/dbeaver-ce_22.1.0_amd64.deb')
+dbeaver_deb_path, _ = download('https://dbeaver.io/files/22.2.4/dbeaver-ce_22.2.4_amd64.deb')
 bash(f'sudo apt-get install -y {dbeaver_deb_path}')
 
 
