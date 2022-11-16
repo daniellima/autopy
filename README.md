@@ -25,3 +25,6 @@ Not everything is easily automated. These are the things I could not automate ye
   > NVM is an alias loaded in bashrc and I cannot find a way to launch it from python. Using bash -i to force the loading of .bashrc for some reason causes the python process to stop. See: https://unix.stackexchange.com/questions/101620/how-to-load-bashrc-from-bash-c)
 - run npm install -g kafka-console (needs node installed, see item above)
 - run npm install -g bull-repl (needs node installed, see item above)
+
+## Improvements
+- Create abstraction to install packages that require adding GPG keys and creating list files. It's sad, but you cannot simply apt-get install anything these days.

@@ -335,3 +335,12 @@ log_section('Load local specific commands')
 if not os.path.exists('local.py'):
     bash('cp local.sample.py local.py')
 exec(open('local.py').read())
+
+log_section('Install Hashicorp Vault')
+
+bash('wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg >/dev/null')
+vault_configuration_file_path = '/etc/apt/sources.list.d/hashicorp.list'
+if not os.path.exists(vault_configuration_file_path):
+    bash(f'echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee {vault_configuration_file_path}')
+    bash('sudo apt-get update')
+bash('sudo apt install -y vault')
