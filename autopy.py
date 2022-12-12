@@ -24,8 +24,9 @@ def create_folder(folder_path):
         os.mkdir(folder_path)
         logger.info(f"Created '{folder_path}' directory")
 
-def clone_git_repo(repo_url, clone_path):
-    repo_folder_name = re.search(r'^.*/(.*)\.git$', repo_url).group(1)
+def clone_git_repo(repo_url, clone_path, repo_folder_name=None):
+    if repo_folder_name is None:
+        repo_folder_name = re.search(r'^.*/(.*)\.git$', repo_url).group(1)
     repo_path = os.path.join(clone_path, repo_folder_name)
     
     if not os.path.exists(repo_path):
@@ -329,13 +330,6 @@ log_section('Install aws2-wrap')
 
 bash('sudo pip3 install aws2-wrap')
 
-
-log_section('Load local specific commands')
-
-if not os.path.exists('local.py'):
-    bash('cp local.sample.py local.py')
-exec(open('local.py').read())
-
 log_section('Install Hashicorp Vault')
 
 bash('wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg >/dev/null')
@@ -344,3 +338,10 @@ if not os.path.exists(vault_configuration_file_path):
     bash(f'echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee {vault_configuration_file_path}')
     bash('sudo apt-get update')
 bash('sudo apt install -y vault')
+
+log_section('Load local specific commands')
+
+if not os.path.exists('local.py'):
+    bash('cp local.sample.py local.py')
+
+exec(open('local.py').read())
