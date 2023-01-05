@@ -74,6 +74,7 @@ apps = [
     "make",
     "fzf",
     "python3-pip",
+    "python3-venv",
     "postgresql-client"
 ]
 bash(f'sudo apt-get install -y {" ".join(apps)}')
