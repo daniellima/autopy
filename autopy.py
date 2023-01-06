@@ -144,14 +144,9 @@ docker_repo_configuration_file_path = '/etc/apt/sources.list.d/docker.list'
 if not os.path.exists(docker_repo_configuration_file_path):
     bash(f'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee {docker_repo_configuration_file_path} > /dev/null')
     bash('sudo apt-get update')
-bash('sudo apt-get install -y docker-ce docker-ce-cli containerd.io')
+bash('sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin')
 # Configure Docker to be run by non-root user
 bash('sudo usermod -aG docker $USER')
-
-docker_compose_bin_path = '/usr/local/bin/docker-compose'
-docker_compose_path, _ = download('https://github.com/docker/compose/releases/download/v2.6.0/docker-compose-linux-x86_64')
-bash(f'sudo cp {docker_compose_path} {docker_compose_bin_path}')
-bash(f'sudo chmod +x {docker_compose_bin_path}')
 
 
 log_section('Git')
