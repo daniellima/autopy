@@ -181,9 +181,10 @@ for repo_url in git_repo_urls:
 
 log_section('Kubectl')
 
-bash('sudo snap install kubectl --classic')
-# Configure kubectl autocompletion
-bash('kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null')
+bash('sudo curl -fsSLo /etc/apt/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg')
+bash('echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list')
+bash('sudo apt-get update')
+bash('sudo apt-get install -y kubectl')
 
 kubectx_path, _ = download("https://github.com/ahmetb/kubectx/raw/master/kubectx")
 bash(f'sudo mv {kubectx_path} /usr/local/bin')
@@ -271,8 +272,8 @@ bash('sudo apt install -y brave-browser')
 
 log_section('Install Bitwarden')
 
-bash('sudo snap install bitwarden')
-
+path, _ = download('https://vault.bitwarden.com/download/?app=desktop&platform=linux&variant=deb', 'bitwarden.deb')
+bash(f'sudo apt-get install -y {path}')
 
 log_section('Terraform')
 
