@@ -75,7 +75,8 @@ apps = [
     "fzf",
     "python3-pip",
     "python3-venv",
-    "postgresql-client"
+    "postgresql-client",
+    "libpq-dev" # to install psycopg from source
 ]
 bash(f'sudo apt-get install -y {" ".join(apps)}')
 
@@ -336,11 +337,21 @@ if not os.path.exists(vault_configuration_file_path):
     bash('sudo apt-get update')
 bash('sudo apt install -y vault')
 
+log_section('Install Hashicorp Boundary')
+
 boundary_configuration_file_path = '/etc/apt/sources.list.d/hashicorp.list'
 if not os.path.exists(boundary_configuration_file_path):
     bash(f'echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee {boundary_configuration_file_path}')
     bash('sudo apt-get update')
 bash('sudo apt install -y boundary')
+
+log_section('Install poetry')
+
+bash('curl -sSL https://install.python-poetry.org | python3 -')
+if not os.path.exists('/usr/local/bin/poetry'):
+    bash('sudo ln -s ~/.local/share/pypoetry/venv/bin/poetry /usr/local/bin')
+
+bash('poetry config virtualenvs.in-project true')
 
 log_section('Load local specific commands')
 
