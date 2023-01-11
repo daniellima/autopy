@@ -1,6 +1,14 @@
 {
+    // Extremely confusing because things keep moving
     "workbench.editor.enablePreview": false,
+    "explorer.autoReveal": false,
+    // Because I am in 2022
     "files.autoSave": "afterDelay",
+    // Easier to switch to the window using ctrl+tab
     "window.title": "${rootName}${separator}${dirty}${activeEditorShort}${separator}${appName}",
-    "explorer.autoReveal": false
+    // Don't want to lose control and get confused about being inside the env
+    "python.terminal.activateEnvironment": false,
+    "python.analysis.typeCheckingMode": "strict",
+    // Horizontal tabs don't scale well when you have multiple ones
+    "workbench.editor.showTabs": false
 }
