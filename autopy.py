@@ -289,6 +289,13 @@ if not os.path.exists('/usr/local/bin/terraform'):
 bash('go install github.com/terraform-docs/terraform-docs@v0.16.0')
 
 
+log_section('Install Terragrunt')
+
+terragrunt_path, _ = download("https://github.com/gruntwork-io/terragrunt/releases/download/v0.43.2/terragrunt_linux_amd64")
+bash(f'sudo mv {terragrunt_path} /usr/local/bin/terragrunt')
+bash(f'sudo chmod +x /usr/local/bin/terragrunt')
+
+
 log_section('Install K6')
 
 bash('sudo gpg -k') # Ensure that GPG folder is created. See: https://k6.io/docs/getting-started/installation/troubleshooting/#error-importing-k6s-gpg-key
