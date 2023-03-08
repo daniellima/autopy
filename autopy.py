@@ -296,6 +296,13 @@ bash(f'sudo mv {terragrunt_path} /usr/local/bin/terragrunt')
 bash(f'sudo chmod +x /usr/local/bin/terragrunt')
 
 
+log_section('Install kops')
+
+kops_path, _ = download("https://github.com/kubernetes/kops/releases/download/v1.25.3/kops-linux-amd64")
+bash(f'sudo mv {kops_path} /usr/local/bin/kops')
+bash(f'sudo chmod +x /usr/local/bin/kops')
+
+
 log_section('Install K6')
 
 bash('sudo gpg -k') # Ensure that GPG folder is created. See: https://k6.io/docs/getting-started/installation/troubleshooting/#error-importing-k6s-gpg-key
