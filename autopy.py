@@ -256,7 +256,7 @@ bash(f'sudo apt-get install -y {dbeaver_deb_path}')
 
 log_section('Download Go')
 
-go_tar_path, _ = download('https://go.dev/dl/go1.18.7.linux-amd64.tar.gz')
+go_tar_path, _ = download('https://go.dev/dl/go1.20.2.linux-amd64.tar.gz')
 bash('sudo rm -rf /usr/local/go')
 bash(f'sudo tar -C /usr/local -xzf {go_tar_path}')
 
