@@ -1,6 +1,5 @@
 {
     // Extremely confusing because things keep moving
-    "workbench.editor.enablePreview": false,
     "explorer.autoReveal": false,
     // Because I am in 2022
     "files.autoSave": "afterDelay",

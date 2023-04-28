@@ -208,12 +208,6 @@ if not os.path.exists('/usr/local/bin/aws'):
     bash(f'sudo {awscli_unzipped_path}/install')
 
 
-log_section('Lens')
-
-lens_deb_path, _ = download('https://downloads.k8slens.dev/ide/Lens-2022.10.131529-latest.amd64.deb')
-bash(f'sudo apt-get install -y {lens_deb_path}')
-
-
 log_section('Redis')
 
 # Apparently there is not a package to install just the redis-cli.
