@@ -285,7 +285,7 @@ bash('go install github.com/terraform-docs/terraform-docs@v0.16.0')
 
 log_section('Install Terragrunt')
 
-terragrunt_path, _ = download("https://github.com/gruntwork-io/terragrunt/releases/download/v0.43.2/terragrunt_linux_amd64")
+terragrunt_path, _ = download("https://github.com/gruntwork-io/terragrunt/releases/download/v0.48.4/terragrunt_linux_amd64")
 bash(f'sudo mv {terragrunt_path} /usr/local/bin/terragrunt')
 bash(f'sudo chmod +x /usr/local/bin/terragrunt')
 
