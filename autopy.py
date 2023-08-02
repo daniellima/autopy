@@ -182,7 +182,8 @@ for repo_url in git_repo_urls:
 
 log_section('Kubectl')
 
-bash('sudo curl -fsSLo /etc/apt/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg')
+bash('sudo rm /etc/apt/keyrings/kubernetes-archive-keyring.gpg') # gpg will ask for confirmation if overwriting file. Instead of using --yes, which can be dangerous since I don't know all the questions it does, it's better to delete the file
+bash('curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg')
 bash('echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list')
 bash('sudo apt-get update')
 bash('sudo apt-get install -y kubectl')
@@ -219,8 +220,9 @@ bash('sudo systemctl stop redis-server')
 
 log_section('Mongo DB')
 
-# Instruction from https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/#install-mongodb-community-edition-using-deb-packages
-bash(f'wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -')
+# Instruction from https://www.mongodb.com/docs/v5.0/tutorial/install-mongodb-on-ubuntu/
+bash('sudo rm /usr/share/keyrings/mongodb-server-5.0.gpg') # gpg will ask for confirmation if overwriting file. Instead of using --yes, which can be dangerous since I don't know all the questions it does, it's better to delete the file
+bash(f'curl -fsSL https://pgp.mongodb.com/server-5.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-5.0.gpg --dearmor')
 mongodb_repo_configuration_file_path = '/etc/apt/sources.list.d/mongodb-org-5.0.list'
 if not os.path.exists(mongodb_repo_configuration_file_path):
     bash(f'echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | sudo tee {mongodb_repo_configuration_file_path}')
