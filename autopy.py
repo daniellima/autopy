@@ -75,8 +75,10 @@ apps = [
     "fzf",
     "python3-pip",
     "python3-venv",
+    "python3-distutils", # fix this bug related to ubuntu jammy and python3.10: https://github.com/pre-commit/pre-commit/issues/2336 as recommended here: https://github.com/deadsnakes/python3.10-jammy
     "postgresql-client",
-    "libpq-dev" # to install psycopg from source
+    "libpq-dev", # to install psycopg from source
+    "tree"
 ]
 bash(f'sudo apt-get install -y {" ".join(apps)}')
 
