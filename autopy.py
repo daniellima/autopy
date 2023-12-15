@@ -365,6 +365,17 @@ if not os.path.exists('/usr/local/bin/poetry'):
 
 bash('poetry config virtualenvs.in-project true')
 
+
+log_section('Pyenv')
+
+if not os.path.exists(os.path.join(home_path, '.pyenv')):
+    bash('curl https://pyenv.run | bash')
+
+bash('echo \'export PYENV_ROOT="$HOME/.pyenv"\' >> ~/.zshrc')
+bash('echo \'[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"\' >> ~/.zshrc')
+bash('echo \'eval "$(pyenv init -)"\' >> ~/.zshrc')
+
+
 log_section('Load local specific commands')
 
 if not os.path.exists('local.py'):
