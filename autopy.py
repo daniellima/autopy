@@ -160,6 +160,11 @@ bash('sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compo
 bash('sudo usermod -aG docker $USER')
 
 
+log_section('Flux')
+if not os.path.exists('/usr/local/bin/flux'):
+    bash('curl -s https://fluxcd.io/install.sh | sudo bash')
+
+
 log_section('Git')
 
 gitconfig_path = os.path.join(home_path, '.gitconfig')
