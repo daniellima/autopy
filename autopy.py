@@ -368,7 +368,7 @@ boundary_configuration_file_path = '/etc/apt/sources.list.d/hashicorp.list'
 if not os.path.exists(boundary_configuration_file_path):
     bash(f'echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee {boundary_configuration_file_path}')
     bash('sudo apt-get update')
-bash('sudo apt install -y boundary')
+bash('sudo apt install -y boundary=0.10.0-1')
 
 log_section('Install poetry')
 
