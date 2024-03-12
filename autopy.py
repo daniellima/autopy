@@ -93,9 +93,6 @@ bash(f'sudo apt-get install -y {" ".join(apps)}')
 
 log_section('Postman')
 
-# Stopped using the snap install because it's really outdated
-# See: https://github.com/postmanlabs/postman-app-support/issues/9573
-# bash('sudo snap install postman')
 postman_download_path, _ = download('https://dl.pstmn.io/download/latest/linux64', 'postman-linux-x64.tar.gz')
 bash(f'tar -zxvf {postman_download_path} -C {configuration_path}')
 with open('postman/postman.desktop', 'r') as f:
@@ -197,18 +194,16 @@ for repo_url in git_repo_urls:
 
 log_section('Kubectl')
 
-bash('sudo rm /etc/apt/keyrings/kubernetes-archive-keyring.gpg') # gpg will ask for confirmation if overwriting file. Instead of using --yes, which can be dangerous since I don't know all the questions it does, it's better to delete the file
-bash('curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg')
-bash('echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list')
-bash('sudo apt-get update')
-bash('sudo apt-get install -y kubectl')
+kubectl_path, _ = download("https://dl.k8s.io/release/v1.29.2/bin/linux/amd64/kubectl")
+bash(f'sudo cp {kubectl_path} /usr/local/bin')
+bash(f'sudo chmod +x /usr/local/bin/kubectl')
 
 kubectx_path, _ = download("https://github.com/ahmetb/kubectx/raw/master/kubectx")
-bash(f'sudo mv {kubectx_path} /usr/local/bin')
+bash(f'sudo cp {kubectx_path} /usr/local/bin')
 bash(f'sudo chmod +x /usr/local/bin/kubectx')
 
 kubens_path, _ = download("https://github.com/ahmetb/kubectx/raw/master/kubens")
-bash(f'sudo mv {kubens_path} /usr/local/bin')
+bash(f'sudo cp {kubens_path} /usr/local/bin')
 bash(f'sudo chmod +x /usr/local/bin/kubens')
 
 
@@ -236,13 +231,13 @@ bash('sudo systemctl stop redis-server')
 log_section('Mongo DB')
 
 # Instruction from https://www.mongodb.com/docs/v5.0/tutorial/install-mongodb-on-ubuntu/
-bash('sudo rm /usr/share/keyrings/mongodb-server-5.0.gpg') # gpg will ask for confirmation if overwriting file. Instead of using --yes, which can be dangerous since I don't know all the questions it does, it's better to delete the file
-bash(f'curl -fsSL https://pgp.mongodb.com/server-5.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-5.0.gpg --dearmor')
-mongodb_repo_configuration_file_path = '/etc/apt/sources.list.d/mongodb-org-5.0.list'
+bash('sudo rm -f /usr/share/keyrings/mongodb-server-7.0.gpg') # gpg will ask for confirmation if overwriting file. Instead of using --yes, which can be dangerous since I don't know all the questions it does, it's better to delete the file
+bash(f'curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor')
+mongodb_repo_configuration_file_path = '/etc/apt/sources.list.d/mongodb-org-7.0.list'
 if not os.path.exists(mongodb_repo_configuration_file_path):
-    bash(f'echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | sudo tee {mongodb_repo_configuration_file_path}')
+    bash(f'echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee {mongodb_repo_configuration_file_path}')
     bash('sudo apt-get update')
-bash('sudo apt-get install -y mongodb-mongosh mongodb-org-tools')
+bash('sudo apt-get install -y mongodb-org')
 
 
 log_section('Node')
@@ -303,14 +298,14 @@ bash('go install github.com/terraform-docs/terraform-docs@v0.16.0')
 log_section('Install Terragrunt')
 
 terragrunt_path, _ = download("https://github.com/gruntwork-io/terragrunt/releases/download/v0.48.4/terragrunt_linux_amd64")
-bash(f'sudo mv {terragrunt_path} /usr/local/bin/terragrunt')
+bash(f'sudo cp {terragrunt_path} /usr/local/bin/terragrunt')
 bash(f'sudo chmod +x /usr/local/bin/terragrunt')
 
 
 log_section('Install kops')
 
 kops_path, _ = download("https://github.com/kubernetes/kops/releases/download/v1.25.3/kops-linux-amd64")
-bash(f'sudo mv {kops_path} /usr/local/bin/kops')
+bash(f'sudo cp {kops_path} /usr/local/bin/kops')
 bash(f'sudo chmod +x /usr/local/bin/kops')
 
 
@@ -347,7 +342,13 @@ bash('go install -tags \'postgres\' github.com/golang-migrate/migrate/v4/cmd/mig
 
 log_section('Install Helm')
 
-bash('sudo snap install helm --classic')
+helm_download_path, _ = download('https://get.helm.sh/helm-v3.14.2-linux-amd64.tar.gz', 'helm-linux-x64.tar.gz')
+helm_binary_folder = f"{downloads_path}/helm-linux-x64"
+bash(f"mkdir -p {helm_binary_folder}")
+bash(f'tar -zxvf {helm_download_path} -C {helm_binary_folder}')
+
+bash(f'sudo cp {helm_binary_folder}/linux-amd64/helm /usr/local/bin')
+bash(f'sudo chmod +x /usr/local/bin/helm')
 
 log_section('Install aws2-wrap')
 
