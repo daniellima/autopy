@@ -350,6 +350,18 @@ bash(f'tar -zxvf {helm_download_path} -C {helm_binary_folder}')
 bash(f'sudo cp {helm_binary_folder}/linux-amd64/helm /usr/local/bin')
 bash(f'sudo chmod +x /usr/local/bin/helm')
 
+
+log_section('Install mprocs')
+
+mproc_download_path, _ = download('https://github.com/pvolok/mprocs/releases/download/v0.6.4/mprocs-0.6.4-linux64.tar.gz', 'mproc-linux-x64.tar.gz')
+mproc_binary_folder = f"{downloads_path}/mproc-linux-x64"
+bash(f"mkdir -p {mproc_binary_folder}")
+bash(f'tar -zxvf {mproc_download_path} -C {mproc_binary_folder}')
+
+bash(f'sudo cp {mproc_binary_folder}/mprocs /usr/local/bin')
+bash(f'sudo chmod +x /usr/local/bin/mprocs')
+
+
 log_section('Install aws2-wrap')
 
 bash('sudo pip3 install aws2-wrap')
