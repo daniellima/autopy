@@ -26,7 +26,12 @@ def create_folder(folder_path):
 
 def clone_git_repo(repo_url, clone_path, repo_folder_name=None):
     if repo_folder_name is None:
-        repo_folder_name = re.search(r'^.*/(.*)\.git$', repo_url).group(1)
+        try:
+            repo_folder_name = re.search(r'^.*/(.*)\.git$', repo_url).group(1)
+        except Exception as ex:
+            logger.info(f"Could not extract repo folder name from url: {repo_url}")
+            exit(1)
+
     repo_path = os.path.join(clone_path, repo_folder_name)
     
     if not os.path.exists(repo_path):
