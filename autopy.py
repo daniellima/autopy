@@ -78,9 +78,12 @@ apps = [
     "zsh",
     "make",
     "fzf",
+    "unzip",
     "python3-pip",
     "python3-venv",
-    "python3-distutils", # fix this bug related to ubuntu jammy and python3.10: https://github.com/pre-commit/pre-commit/issues/2336 as recommended here: https://github.com/deadsnakes/python3.10-jammy
+    # fix this bug related to ubuntu jammy and python3.10: https://github.com/pre-commit/pre-commit/issues/2336 as recommended here: https://github.com/deadsnakes/python3.10-jammy
+    # Plot twist: ubuntu 24.04 don't like installing this package. Just avoiding it since I don't need python anymore
+    # "python3-distutils", 
     "libffi-dev", # needed for python to properly import _ctypes package. See: https://stackoverflow.com/a/48045929
     "libpq-dev", # to install psycopg from source
     "build-essential",  #
@@ -247,7 +250,7 @@ bash('sudo apt-get install -y mongodb-org')
 
 log_section('Node')
 
-bash('curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash')
+bash('curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash')
 
 
 log_section('.NET 6 SDK')
