@@ -215,6 +215,13 @@ for repo_url in git_repo_urls:
 # bash(f'sudo chmod +x /usr/local/bin/kubens')
 
 
+log_section('WSLU')
+
+bash('sudo add-apt-repository -y ppa:wslutilities/wslu')
+bash('sudo apt update')
+bash('sudo apt-get install wslu')
+
+
 log_section('AWS CLI')
 
 awscli_installer_dir_path = os.path.join(downloads_path, 'aws')
