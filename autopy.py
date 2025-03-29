@@ -287,8 +287,7 @@ bash('sudo apt install -y brave-browser')
 
 log_section('Install Bitwarden')
 
-path, _ = download('https://vault.bitwarden.com/download/?app=desktop&platform=linux&variant=deb', 'bitwarden.deb')
-bash(f'sudo apt-get install -y {path}')
+bash(f'flatpak install -y flathub com.bitwarden.desktop')
 
 log_section('Terraform')
 
