@@ -151,19 +151,19 @@ clone_git_repo('https://github.com/reobin/typewritten.git', zsh_theme_path)
 # bash('cp vscode/settings.json ~/.config/Code/User/settings.json')
 
 
-# log_section('Docker')
+log_section('Docker')
 
-# # Instruction from https://docs.docker.com/engine/install/ubuntu/
-# docker_keyring_path = '/usr/share/keyrings/docker-archive-keyring.gpg';
-# if not os.path.exists(docker_keyring_path):
-#     bash(f'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o {docker_keyring_path}')
-# docker_repo_configuration_file_path = '/etc/apt/sources.list.d/docker.list'
-# if not os.path.exists(docker_repo_configuration_file_path):
-#     bash(f'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee {docker_repo_configuration_file_path} > /dev/null')
-#     bash('sudo apt-get update')
-# bash('sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin')
-# # Configure Docker to be run by non-root user
-# bash('sudo usermod -aG docker $USER')
+# Instruction from https://docs.docker.com/engine/install/ubuntu/
+docker_keyring_path = '/usr/share/keyrings/docker-archive-keyring.gpg';
+if not os.path.exists(docker_keyring_path):
+    bash(f'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o {docker_keyring_path}')
+docker_repo_configuration_file_path = '/etc/apt/sources.list.d/docker.list'
+if not os.path.exists(docker_repo_configuration_file_path):
+    bash(f'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee {docker_repo_configuration_file_path} > /dev/null')
+    bash('sudo apt-get update')
+bash('sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin')
+# Configure Docker to be run by non-root user
+bash('sudo usermod -aG docker $USER')
 
 
 # log_section('Flux')
