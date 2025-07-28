@@ -120,7 +120,7 @@ if not os.path.exists(os.path.join(home_path, '.oh-my-zsh')):
     # using echo to respond 'no' when install script asks if I want to make zsh the default shell
     bash('echo n | sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"')
 # oh my zsh installation overrides the .zshrc file. So we set it after installing oh my zsh
-bash(f'cat zsh/.zshrc zsh/zsh_conf.sh zsh/git_alias.sh zsh/docker_compose_alias.sh zsh/ssh-agent.sh zsh/wslutils.sh > {zshrc_path}')
+bash(f'cat zsh/.zshrc zsh/zsh_conf.sh zsh/alias.sh zsh/git_alias.sh zsh/docker_compose_alias.sh zsh/ssh-agent.sh zsh/wslutils.sh > {zshrc_path}')
 # install custom theme
 zsh_custom_path = bash('zsh -ic \'echo $ZSH_CUSTOM\'').stdout.split()[-1].strip()
 zsh_theme_path = os.path.join(zsh_custom_path, 'themes')
@@ -149,6 +149,17 @@ clone_git_repo('https://github.com/reobin/typewritten.git', zsh_theme_path)
 
 # bash('cp vscode/keybindings.json ~/.config/Code/User/keybindings.json')
 # bash('cp vscode/settings.json ~/.config/Code/User/settings.json')
+
+
+log_section('Github CLI')
+
+bash(f'sudo mkdir -p -m 755 /etc/apt/keyrings')
+bash(f'wget -nv -O- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null')
+bash(f'sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg')
+bash(f'sudo mkdir -p -m 755 /etc/apt/sources.list.d')
+bash(f'echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null')
+bash(f'sudo apt update')
+bash(f'sudo apt install gh -y')
 
 
 log_section('Docker')
