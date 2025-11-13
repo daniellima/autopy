@@ -9,5 +9,7 @@
     "python.terminal.activateEnvironment": false,
     "python.analysis.typeCheckingMode": "strict",
     // Horizontal tabs don't scale well when you have multiple ones
-    "workbench.editor.showTabs": false
+    "workbench.editor.showTabs": false,
+    "terminal.integrated.allowChords": false,
+    "terminal.integrated.stickyScroll.enabled": false
 }
