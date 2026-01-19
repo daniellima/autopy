@@ -231,7 +231,7 @@ log_section('WSLU')
 
 bash('sudo add-apt-repository -y ppa:wslutilities/wslu')
 bash('sudo apt update')
-bash('sudo apt-get install wslu')
+bash('sudo apt-get install -y wslu')
 
 
 log_section('AWS CLI')
