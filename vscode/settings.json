@@ -9,7 +9,13 @@
     "python.terminal.activateEnvironment": false,
     "python.analysis.typeCheckingMode": "strict",
     // Horizontal tabs don't scale well when you have multiple ones
-    "workbench.editor.showTabs": "none",
+    "workbench.editor.showTabs": "single",
+    // Distracting, can easily break the flow of writing code
+    "github.copilot.nextEditSuggestions.enabled": false,
+    // Copilot was not reading the terminal output with this enabled. Maybe related with ZSH?
+    "terminal.integrated.shellIntegration.enabled": false,
+    // Allow Ctrl+K shortcut to be used (go to end of terminal line)
     "terminal.integrated.allowChords": false,
+    // This was very buggy. Maybe related with ZSH?
     "terminal.integrated.stickyScroll.enabled": false
 }
