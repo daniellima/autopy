@@ -79,8 +79,10 @@ apps = [
     "make",
     "fzf",
     "unzip",
+    "gnome-keyring",
     "python3-pip",
     "python3-venv",
+    "python3-keyring",
     # fix this bug related to ubuntu jammy and python3.10: https://github.com/pre-commit/pre-commit/issues/2336 as recommended here: https://github.com/deadsnakes/python3.10-jammy
     # Plot twist: ubuntu 24.04 don't like installing this package. Just avoiding it since I don't need python anymore
     # "python3-distutils", 
