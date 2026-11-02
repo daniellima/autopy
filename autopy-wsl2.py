@@ -277,6 +277,10 @@ bash('curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh |
 bash('curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | PROFILE=~/.bashrc bash')
 
 
+log_section('Copilot CLI')
+
+bash('npm install -g @github/copilot')
+
 # log_section('.NET 6 SDK')
 
 # dotnet_deb_path, downloaded = download('https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb')
